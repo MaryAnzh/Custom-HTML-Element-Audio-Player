@@ -1,17 +1,16 @@
 import { Control } from "../../control";
 
-let id = 0;
 export class Main {
     public name: string = 'main-page';
 
     public page: Control;
-    private _title: Control;
-
+    private title: Control;
+    private audio: Control;
 
     constructor() {
         this.page = new Control(null, 'div', this.name, '', null);
-        this.page.node.id = (id++).toString();
-        this._title = new Control(this.page.node, 'h2', `${this.name}__title`, this.name, null);
+        this.title = new Control(this.page.node, 'h2', `${this.name}__title`, this.name, null);
+        this.audio = new Control(this.page.node, 'audio-player', 'custom', '', [{ name: 'playButtonSize', value: '20' }]);
     }
 
     destroy: () => void = () => {

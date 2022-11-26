@@ -39,14 +39,14 @@ const config = {
       inject: 'body',
     }),
     new CleanWebpackPlugin(),
-    // new CopyPlugin({
-    //   patterns: [
-    //     {
-    //       from: path.resolve(__dirname, 'src/assets'),
-    //       to: path.resolve(__dirname, 'dist/assets')
-    //     },
-    //   ],
-    // }),
+    new CopyPlugin({
+      patterns: [
+        {
+          from: 'src/assets/audio',
+          to: 'assets/audio'
+        },
+      ],
+    }),
   ],
   module: {
     rules: [

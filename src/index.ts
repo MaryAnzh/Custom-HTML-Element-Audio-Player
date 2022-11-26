@@ -3,6 +3,9 @@
 import './assets/style/style.scss';
 import { app } from './view/app';
 import { AppRouter } from './view/app-router ';
+import { AudioPlayerCustomHTML } from './view/components/audio-player/audio-player';
+
+customElements.define("audio-player", AudioPlayerCustomHTML);
 
 const routes: string[] = [
     '/',

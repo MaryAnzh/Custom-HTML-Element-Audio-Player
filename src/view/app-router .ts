@@ -1,5 +1,3 @@
-import { IRoute } from "../model/interfaces/route.interface";
-import { Page } from "../model/interfaces/page.interface";
 import { NotFound } from './pages/not-found/not-found'
 
 export type Request = {
