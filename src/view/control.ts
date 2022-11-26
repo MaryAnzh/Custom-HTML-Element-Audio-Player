@@ -1,7 +1,7 @@
 
 interface IAtr {
     name: string,
-    value: string | boolean,
+    value: string,
 }
 export class Control {
     public node;

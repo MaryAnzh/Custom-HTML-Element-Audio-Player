@@ -1,9 +1,32 @@
 "use strict";
+
 import './assets/style/style.scss';
+import { app } from './view/app';
+import { AppRouter } from './view/app-router ';
 
-import { LocalStorageService } from './service/localStorage';
+const routes: string[] = [
+    '/',
+    '/about'
+];
 
-const body = document.querySelector('body');
+let currentPage: string | null = null;
 
-// const page = () => new MainPage(body);
-// window.onload = page;
+const appRoute = new AppRouter(routes);
+
+const onloadPage = () => {
+    const page = appRoute.route();
+    currentPage = page;
+    app.addPage(page);
+}
+
+const onloadApp = () => {
+    app;
+    onloadPage();
+}
+
+window.onload = () => onloadApp();
+
+window.addEventListener('hashchange', () => {
+    app.removePage();
+    onloadPage();
+});
