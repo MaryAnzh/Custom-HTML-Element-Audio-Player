@@ -13,8 +13,9 @@ class App extends Control {
 
     constructor() {
         super(document.body, 'div', 'wrapper');
-        
-        this._header = new Header();
+
+        const langs = ['en', 'ru', 'by'];
+        this._header = new Header(langs);
         this._footer = new Footer();
         this.main = new Control(null, 'main', 'main', '', null);
         this.node.append(this._header.node, this.main.node, this._footer.node);

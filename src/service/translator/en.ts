@@ -1,9 +1,6 @@
 export const en = {
-    MAIN: {
-        TITLE: 'main',
-    },
-
-    ABOUT: {
-        TITLE: 'about',
+    NAV: {
+        MAIN: 'main',
+        ABOUT: 'about'
     },
 };
