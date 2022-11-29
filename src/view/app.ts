@@ -7,29 +7,29 @@ import { NotFound } from './pages/not-found/not-found';
 import { translator } from '../service/translator/translator';
 
 class App extends Control {
-    private _header: Header;
-    private _footer: Footer;
+    private header: Header;
+    private footer: Footer;
     public main: Control;
-    private _currentPage: Main | About | NotFound | null = null;
+    private currentPage: Main | About | NotFound | null = null;
 
     constructor() {
         super(document.body, 'div', 'wrapper');
 
         const langs = ['en', 'ru', 'by'];
-        this._header = new Header(langs);
-        this._footer = new Footer();
+        this.header = new Header(langs);
+        this.footer = new Footer();
         this.main = new Control(null, 'main', 'main', '', null);
-        this.node.append(this._header.node, this.main.node, this._footer.node);
+        this.node.append(this.header.node, this.main.node, this.footer.node);
 
         this.translate('en');
 
-        this._header.onChange = (lang) => {
+        this.header.onChange = (lang) => {
             this.translate(lang);
         };
     }
 
     addPage(page: string) {
-        this._header.selectCurrentPage(page);
+        this.header.selectCurrentPage(page);
         let newPage: Main | About | NotFound | null = null;
 
         switch (page) {
@@ -45,19 +45,19 @@ class App extends Control {
                 break;
         }
 
-        this._currentPage = newPage;
+        this.currentPage = newPage;
         this.main.node.appendChild(newPage.node);
     }
 
     removePage() {
-        if (this._currentPage !== null) {
-            this._currentPage.destroy();
+        if (this.currentPage !== null) {
+            this.currentPage.destroy();
         }
     }
 
     translate = (lang: string): void => {
         const langObj = translator.translate(lang);
-        this._header.translate(langObj);
+        this.header.translate(langObj);
     }
 }
 
