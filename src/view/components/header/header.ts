@@ -1,10 +1,11 @@
+import { IElementTranslate } from '../../../interfaces/translator.interfaces';
 import { Nav } from '../nav/nav'
 
 
 export class Header {
     public node: Element;
     private _nav: Nav;
-    public navItems: HTMLElement[] = [];
+    public navItems: IElementTranslate[] = [];
 
     constructor() {
         this.node = document.createElement('header');
@@ -16,13 +17,13 @@ export class Header {
     }
 
     selectCurrentPage(pageName: string) {
-        this.navItems.forEach(el => el.classList.remove('active'));
+        this.navItems.forEach(item => item.element.classList.remove('active'));
         switch (pageName) {
             case '/':
-                this.navItems[0].classList.add('active');
+                this.navItems[0].element.classList.add('active');
                 break;
             case '/about':
-                this.navItems[1].classList.add('active');
+                this.navItems[1].element.classList.add('active');
                 break;
             default:
                 break;

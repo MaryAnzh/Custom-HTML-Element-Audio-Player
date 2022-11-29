@@ -1,4 +1,4 @@
-import { Control } from "../../control";
+import { Control } from "../../../service/control";
 
 let id = 0;
 export class About {

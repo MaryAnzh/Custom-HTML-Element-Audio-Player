@@ -1,3 +1,4 @@
+
 export class Footer {
     public node: Element;
     constructor() {

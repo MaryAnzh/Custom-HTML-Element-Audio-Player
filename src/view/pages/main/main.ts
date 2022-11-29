@@ -1,4 +1,4 @@
-import { Control } from "../../control";
+import { Control } from "../../../service/control";
 
 export class Main {
     public name: string = 'main-page';
@@ -9,7 +9,7 @@ export class Main {
 
     constructor() {
         this.page = new Control(null, 'div', this.name, '', null);
-        this.title = new Control(this.page.node, 'h2', `${this.name}__title`, this.name, null);
+        this.title = new Control(this.page.node, 'h2', `${this.name}__title`, 'Custom HTML Element', null);
         this.audio = new Control(this.page.node, 'audio-player', 'custom', '', [{ name: 'playButtonSize', value: '20' }]);
     }
 

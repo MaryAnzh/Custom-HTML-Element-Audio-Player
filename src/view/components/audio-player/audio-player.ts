@@ -1,4 +1,4 @@
-import { Control } from '../../control';
+import { Control } from '../../../service/control';
 
 export class AudioPlayerCustomHTML extends HTMLElement {
     private audio = new Audio();

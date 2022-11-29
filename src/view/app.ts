@@ -1,4 +1,4 @@
-import { Control } from './control';
+import { Control } from '../service/control';
 import { Header } from './components/header/header';
 import { Footer } from './components/footer/footer';
 import { Main } from './pages/main/main';
