@@ -23,8 +23,6 @@ class App extends Control {
         this.main = new Control(null, 'main', 'main', '', null);
         this.node.append(this.header.node, this.main.node, this.footer.node);
 
-        this.translate(this.lang);
-
         this.header.onChange = (lang) => {
             this.translate(lang);
             this.lang = lang;
