@@ -17,10 +17,10 @@ export class Nav extends Control {
 
         this._ul = new Control(this.node, 'ul', 'nav__list', '', null);
         this._navLists.forEach((el, i) => {
-            const li = new Control(this._ul.node, 'li', 'nav__list__item', el.name, null);
+            const li = new Control(this._ul.node, 'li', 'nav__list__item', '', null);
             const link = i === 0 ? '#/' : `#/${el.name}`;
             const a = new Control(li.node, 'a', 'nav__list__item__link', '', [{ name: 'href', value: link }]);
-            this.navItems.push({ element: li.node, perentKey: this.perentKey, elementKey: el.key });
+            this.navItems.push({ element: a.node, perentKey: this.perentKey, elementKey: el.key });
         });
     }
 

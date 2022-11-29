@@ -1,28 +1,22 @@
 import { en } from "./en";
 import { ru } from './ru';
+import { by } from './by';
 
 class Translator {
 
-    get lang(): string {
-        return this.lang;
+    constructor() {
     }
 
-    set lang(value: string) {
-        this.lang = value;
-    }
-
-    constructor(lang: string) {
-        this.lang = lang;
-    }
-
-    translate() {
-        switch (this.lang) {
+    translate(lang: string) {
+        switch (lang) {
             case 'ru':
                 return ru;
+            case 'by':
+                return by;
             default:
                 return en;
         }
     }
 }
 
-export const translator = new Translator('en');
+export const translator = new Translator();

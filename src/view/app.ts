@@ -4,6 +4,7 @@ import { Footer } from './components/footer/footer';
 import { Main } from './pages/main/main';
 import { About } from './pages/about/about';
 import { NotFound } from './pages/not-found/not-found';
+import { translator } from '../service/translator/translator';
 
 class App extends Control {
     private _header: Header;
@@ -19,11 +20,16 @@ class App extends Control {
         this._footer = new Footer();
         this.main = new Control(null, 'main', 'main', '', null);
         this.node.append(this._header.node, this.main.node, this._footer.node);
+
+        this.translate('en');
+
+        this._header.onChange = (lang) => {
+            this.translate(lang);
+        };
     }
 
     addPage(page: string) {
         this._header.selectCurrentPage(page);
-
         let newPage: Main | About | NotFound | null = null;
 
         switch (page) {
@@ -49,8 +55,9 @@ class App extends Control {
         }
     }
 
-    translate(config: any): void {
-        this._header.translate(config);
+    translate = (lang: string): void => {
+        const langObj = translator.translate(lang);
+        this._header.translate(langObj);
     }
 }
 
