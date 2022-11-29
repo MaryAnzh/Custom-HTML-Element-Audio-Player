@@ -10,6 +10,9 @@ export class NotFound extends Control {
         this._title = new Control(this.node, 'h2', `${this.name}__title`, this.name);
     }
 
+    translate(config: any): void {
+    }
+
     destroy: () => void = () => {
         this.node.remove();
     };

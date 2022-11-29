@@ -1,4 +1,11 @@
-
-
+.page {
+    max-width: 1200px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
 
 @import './components/components.scss';
+@import './pages/main/main.scss';
+@import './pages/about/about.scss';

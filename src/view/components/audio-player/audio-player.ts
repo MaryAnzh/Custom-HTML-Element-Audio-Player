@@ -3,7 +3,13 @@ import { Control } from '../../../service/control';
 export class AudioPlayerCustomHTML extends HTMLElement {
     private audio = new Audio();
     private container: Control;
+    private controls: Control;
     private playButton: Control;
+    private timeBar: Control;
+    private timeBarTimer: Control;
+    private timeBarAudioTime: Control;
+    private soundBar: Control;
+    private playList: Control;
     isPlay = false;
 
     static observedAttributes = [
@@ -20,13 +26,18 @@ export class AudioPlayerCustomHTML extends HTMLElement {
 
     constructor() {
         super();
+
         this.audio.src = 'assets/audio/Christmas_Time_-_Jingle_Bell_Rock_(musmore.com).mp3';
     }
 
     connectedCallback() {
-        this.container = new Control(this, 'section', 'audio-palayer', '', null);
-        this.playButton = new Control(this.container.node, 'button', 'audio-palayer__button', '+', null);
+        this.container = new Control(this, 'section', 'audio-player');
+        this.controls = new Control(this.container.node, 'div', 'audio-player__controls');
+        this.playButton = new Control(this.controls.node, 'button', 'audio-player__controls__button', '+');
         this.playButton.node.onclick = () => this.play();
+        this.timeBar = new Control(this.controls.node, 'div', 'audio-player__controls__time-bar');
+        this.soundBar = new Control(this.controls.node, 'div', 'audio-player__controls__sound-bar');
+        this.playList = new Control(this.container.node, 'div', 'audio-player__play-list');
     }
 
     disconnectedCallback() {
@@ -39,6 +50,7 @@ export class AudioPlayerCustomHTML extends HTMLElement {
     }
 
     update() { }
+
     play() {
         if (this.isPlay) {
             this.audio.pause();

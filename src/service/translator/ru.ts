@@ -3,4 +3,7 @@ export const ru = {
         MAIN: 'главная',
         ABOUT: 'о проекте',
     },
+    MAIN: {
+        TITLE: 'Пользовательский HTML элемент'
+    }
 };

@@ -3,4 +3,7 @@ export const en = {
         MAIN: 'main',
         ABOUT: 'about'
     },
+    MAIN: {
+        TITLE: 'Custom HTML Element'
+    }
 };

@@ -11,20 +11,23 @@ class App extends Control {
     private footer: Footer;
     public main: Control;
     private currentPage: Main | About | NotFound | null = null;
+    private lang: string;
 
     constructor() {
         super(document.body, 'div', 'wrapper');
 
         const langs = ['en', 'ru', 'by'];
+        this.lang = 'en';
         this.header = new Header(langs);
         this.footer = new Footer();
         this.main = new Control(null, 'main', 'main', '', null);
         this.node.append(this.header.node, this.main.node, this.footer.node);
 
-        this.translate('en');
+        this.translate(this.lang);
 
         this.header.onChange = (lang) => {
             this.translate(lang);
+            this.lang = lang;
         };
     }
 
@@ -47,6 +50,7 @@ class App extends Control {
 
         this.currentPage = newPage;
         this.main.node.appendChild(newPage.node);
+        this.translate(this.lang);
     }
 
     removePage() {
@@ -58,6 +62,9 @@ class App extends Control {
     translate = (lang: string): void => {
         const langObj = translator.translate(lang);
         this.header.translate(langObj);
+        if (this.currentPage) {
+            this.currentPage.translate(langObj);
+        }
     }
 }
 
