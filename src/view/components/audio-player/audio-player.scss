@@ -12,12 +12,57 @@
         &__button {
             width: 30px;
             height: 30px;
+            margin-bottom: 10px;
             border-radius: 50px;
+            border: none;
+            outline: none;
+            background: lightblue;
+            color: blue;
+            transition: .3s;
+            cursor: pointer;
+
+            &:hover {
+                background: rgb(197, 223, 231);
+            }
+
+            &:active {
+                background: white;
+            }
         }
 
         &__time-bar {
+            position: relative;
+            display: flex;
+            align-items: center;
             padding: 5px 10px;
-            border: 1px solid white;
+            //border: 1px solid white;
+
+            &::before {
+                position: absolute;
+                content: '';
+                width: 100%;
+                height: 2px;
+                left: 0;
+                background: lightblue;
+            }
+
+            &__runner {
+                width: 10px;
+                height: 10px;
+                position: absolute;
+                left: 0;
+                background: white;
+                border-radius: 50%;
+            }
+
+        }
+
+        &__times {
+            width: 100%;
+            padding: 10px 5px;
+            display: flex;
+            justify-content: space-between;
+            color: white;
         }
 
         &__sound-bar {
