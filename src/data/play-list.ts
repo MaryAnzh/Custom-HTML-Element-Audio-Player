@@ -1,6 +1,7 @@
 export interface IPlayList {
     title: string,
     src: string,
+    time?: number,
 }
 
 export const playListData: IPlayList[] = [

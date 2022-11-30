@@ -5,10 +5,12 @@ type AudioItem = {
     item: IPlayList,
     icon: SVGSVGElement,
     list: Control,
+    time: number;
 }
 
 export class AudioPlayerCustomHTML extends HTMLElement {
     private audio = new Audio();
+    private currwntAudioInfo: null | IPlayList = null;
     private waitListItems: AudioItem[] = [];
     private playListItems: IPlayList[] = [];
 
@@ -107,8 +109,10 @@ export class AudioPlayerCustomHTML extends HTMLElement {
         const itemInfo = new Control(li.node, 'div', 'items-list__item__info');
         const name = new Control(itemInfo.node, 'p', '', item.title);
         const time = new Control(itemInfo.node, 'p', '');
+        let audioTime = 0;
         audio.onloadedmetadata = () => {
-            time.node.textContent = this.viewTime(audio.duration);
+            audioTime = audio.duration;
+            time.node.textContent = this.viewTime(audioTime);
             audio.onloadedmetadata = null;
         }
 
@@ -116,6 +120,7 @@ export class AudioPlayerCustomHTML extends HTMLElement {
             item: item,
             icon: svg,
             list: li,
+            time: audioTime,
         };
 
         this.waitListItems.push(info);
@@ -130,20 +135,25 @@ export class AudioPlayerCustomHTML extends HTMLElement {
 
         const itemInfo = new Control(li.node, 'div', 'play-list-item__info');
         const name = new Control(itemInfo.node, 'p', '', item.title);
-        const time = new Control(itemInfo.node, 'p', '');
-        audio.onloadedmetadata = () => {
-            time.node.textContent = this.viewTime(audio.duration);
-            audio.onloadedmetadata = null;
-        }
+        const text = item.time ? this.viewTime(item.time) : '';
+        const time = new Control(itemInfo.node, 'p', '', text);
         const svg = document.createElementNS(`http://www.w3.org/2000/svg`, "svg");
         svg.setAttribute('viewBox', '0 0 30 15.7');
         svg.innerHTML = `<path d="M29.7,1.4l-14,14c-0.4,0.4-1,0.4-1.4,0l-14-14c-0.4-0.4-0.4-1,0-1.4h29.4C30.1,0.4,30.1,1,29.7,1.4z"/>
         `;
         li.node.appendChild(svg);
+        icon.node.onclick = () => this.onClickPlay(item, audio);
+
     }
 
 
-    update() { }
+    update() {
+        if (this.currwntAudioInfo) {
+            if (this.currwntAudioInfo.time) {
+                this.timesAudioTime.node.textContent = this.viewTime(this.currwntAudioInfo.time);
+            }
+        }
+    }
 
     play() {
         if (this.isPlay) {
@@ -170,12 +180,27 @@ export class AudioPlayerCustomHTML extends HTMLElement {
     onClick = (info: AudioItem): void => {
         info.icon.onclick = null;
         info.list.destroy();
-        this.playListItems.push(info.item);
+        const item: IPlayList = info.item;
+        item.time = info.time;
+        this.playListItems.push(item);
 
         this.waitListItems = this.waitListItems.filter(el => el !== info);
         this.addAudioItem(this.playListUl.node, info.item);
     }
-    onClickPlay = (): void => {
 
+    onClickPlay = (item: IPlayList, audio: HTMLAudioElement): void => {
+        if (this.audio === audio) {
+            this.play();
+        } else {
+            if (this.isPlay) {
+                this.audio.pause();
+                this.audio.currentTime = 0;
+            }
+            this.currwntAudioInfo = item;
+            this.audio = audio;
+            this.update();
+            this.audio.play();
+            this.isPlay = true;
+        }
     }
 }
