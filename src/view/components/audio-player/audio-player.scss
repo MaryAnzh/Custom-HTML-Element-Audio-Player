@@ -139,10 +139,18 @@
                         }
                     }
 
-                    p {
+                    &__info {
+                        width: 100%;
                         padding-left: 10px;
-                        color: white;
+                        display: flex;
+                        justify-content: space-between;
+
+                        p {
+                            color: lightblue;
+                        }
                     }
+
+
                 }
 
             }
