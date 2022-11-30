@@ -11,10 +11,10 @@ export const playListData: IPlayList[] = [
     },
     {
         title: 'Jingle Bells',
-        src: 'http://download-sounds.ru/wp-content/uploads3/2012/11/BoneyM-JingleBells.mp3'
+        src: 'assets/audio/Jingle Bells - Christmas Songs.mp3'
     },
     {
         title: 'Happy New Year',
-        src: 'http://download-sounds.ru/wp-content/uploads3/2012/11/abba_happy_new_year.mp3'
+        src: 'assets/audio/Happy New Year.mp3'
     }
 ]

@@ -148,11 +148,7 @@ export class AudioPlayerCustomHTML extends HTMLElement {
 
 
     update() {
-        if (this.currwntAudioInfo) {
-            if (this.currwntAudioInfo.time) {
-                this.timesAudioTime.node.textContent = this.viewTime(this.currwntAudioInfo.time);
-            }
-        }
+        
     }
 
     play() {
