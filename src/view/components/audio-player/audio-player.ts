@@ -18,8 +18,11 @@ export class AudioPlayerCustomHTML extends HTMLElement {
     private soundBar: Control;
     private soundBarRunner: Control;
 
+    private lists: Control;
     private playListWrap: Control;
     private playListTitle: Control;
+    private waitingList: Control;
+    private waitingListTitle: Control;
 
     isPlay = false;
     static observedAttributes = [
@@ -41,6 +44,9 @@ export class AudioPlayerCustomHTML extends HTMLElement {
     }
 
     connectedCallback() {
+        //this.audio.src = this.playList[0].src;
+        //this.audio.addEventListener('loadedmetadata', () => this.timesAudioTime.node.textContent = this.viewTime(this.audio.duration));
+
         this.container = new Control(this, 'section', 'audio-player');
         this.controls = new Control(this.container.node, 'div', 'audio-player__controls');
         this.playButton = new Control(this.controls.node, 'button', 'audio-player__controls__button', '+');
@@ -56,10 +62,11 @@ export class AudioPlayerCustomHTML extends HTMLElement {
         this.soundBar = new Control(this.controls.node, 'div', 'audio-player__controls__sound-bar');
         this.soundBarRunner = new Control(this.soundBar.node, 'div', 'audio-player__controls__sound-bar__runner');
 
-        this.playListWrap = new Control(this.container.node, 'div', 'audio-player__play-list');
-        this.playListTitle = new Control(this.playListWrap.node, 'h3', 'audio-player__play-list__title', 'Play List');
-
-        this.audio.src = this.playList[0].src;
+        this.lists = new Control(this.container.node, 'div', 'audio-player__lists');
+        this.playListWrap = new Control(this.lists.node, 'div', ['audio-player__lists__play-list', 'list']);
+        this.playListTitle = new Control(this.playListWrap.node, 'h4', 'list__title', 'Play List');
+        this.waitingList = new Control(this.lists.node, 'h3', ['audio-player__lists__waiting-list', 'list']);
+        this.waitingListTitle = new Control(this.waitingList.node, 'h4', 'list__title', 'Waiting list');
     }
 
     disconnectedCallback() {
@@ -81,4 +88,18 @@ export class AudioPlayerCustomHTML extends HTMLElement {
         }
         this.isPlay = !this.isPlay;
     }
+
+    viewTime(time: number): string {
+        const t = time * 1000;
+        let min = Math.floor(t / 1000 / 60);
+        let sec = Math.floor((t - (min * 1000 * 60)) / 1000);
+        if (sec > 59) {
+            min += 1;
+            sec = sec - 60;
+        }
+        const minView = min < 10 ? `0${min}` : min;
+        const secView = sec < 10 ? `0${sec}` : sec;
+        return minView + ':' + secView;
+    }
+
 }
