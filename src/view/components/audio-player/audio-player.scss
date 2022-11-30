@@ -54,6 +54,7 @@
                 left: 0;
                 background: white;
                 border-radius: 50%;
+                cursor: pointer;
             }
 
         }
@@ -89,6 +90,8 @@
                 height: 10px;
                 border-radius: 4px;
                 background: white;
+                cursor: pointer;
+
             }
         }
     }
@@ -96,14 +99,16 @@
     &__lists {
         width: 100%;
         display: flex;
+        justify-content: space-between;
 
         @media (max-width: 740px) {
             flex-direction: column;
         }
 
         .list {
-            width: 50%;
+            width: 48%;
             padding: 10px 0;
+            border: 1px dotted white;
 
             @media (max-width: 740px) {
                 width: 100%;
@@ -111,8 +116,35 @@
 
             &__title {
                 color: white;
-                padding: 10px 0;
+                padding: 0 10px;
                 width: 100%;
+            }
+
+            .items-list {
+                padding: 10px 5px;
+
+                &__item {
+                    font-weight: normal;
+                    display: flex;
+
+                    svg {
+                        width: 15px;
+                        transform: rotate(90deg);
+                        fill: lightblue;
+                        cursor: pointer;
+                        transition: .3s;
+
+                        &:hover {
+                            fill: white;
+                        }
+                    }
+
+                    p {
+                        padding-left: 10px;
+                        color: white;
+                    }
+                }
+
             }
         }
     }

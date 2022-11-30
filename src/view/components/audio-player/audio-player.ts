@@ -67,6 +67,7 @@ export class AudioPlayerCustomHTML extends HTMLElement {
         this.playListTitle = new Control(this.playListWrap.node, 'h4', 'list__title', 'Play List');
         this.waitingList = new Control(this.lists.node, 'h3', ['audio-player__lists__waiting-list', 'list']);
         this.waitingListTitle = new Control(this.waitingList.node, 'h4', 'list__title', 'Waiting list');
+        this.addAudio(this.waitingList.node, this.playList);
     }
 
     disconnectedCallback() {
@@ -76,6 +77,19 @@ export class AudioPlayerCustomHTML extends HTMLElement {
 
     attributeChangedCallback(name: any, oldValue: any, newValue: any) {
 
+    }
+
+    addAudio(perent: HTMLElement, items: IPlayList[]): void {
+        const ul = new Control(perent, 'ul', 'items-list');
+        items.forEach(item => {
+            const li = new Control(ul.node, 'li', 'items-list__item');
+            const svg = document.createElementNS(`http://www.w3.org/2000/svg`, "svg");
+            svg.setAttribute('viewBox', '0 0 30 15.7');
+            svg.innerHTML = `<path d="M29.7,1.4l-14,14c-0.4,0.4-1,0.4-1.4,0l-14-14c-0.4-0.4-0.4-1,0-1.4h29.4C30.1,0.4,30.1,1,29.7,1.4z"/>
+            `;
+            li.node.appendChild(svg);
+            const text = new Control(li.node, 'p', '', item.title);
+        });
     }
 
     update() { }
