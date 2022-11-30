@@ -1,8 +1,17 @@
 import { Control } from '../../../service/control';
 import { IPlayList } from '../../../data/play-list';
 
+type AudioItem = {
+    item: IPlayList,
+    icon: SVGSVGElement,
+    list: Control,
+}
+
 export class AudioPlayerCustomHTML extends HTMLElement {
     private audio = new Audio();
+    private waitListItems: AudioItem[] = [];
+    private playListItems: IPlayList[] = [];
+
     private container: Control;
 
     private controls: Control;
@@ -21,6 +30,7 @@ export class AudioPlayerCustomHTML extends HTMLElement {
     private lists: Control;
     private playListWrap: Control;
     private playListTitle: Control;
+    private playListUl: Control;
     private waitingList: Control;
     private waitingListTitle: Control;
 
@@ -44,9 +54,6 @@ export class AudioPlayerCustomHTML extends HTMLElement {
     }
 
     connectedCallback() {
-        //this.audio.src = this.playList[0].src;
-        //this.audio.addEventListener('loadedmetadata', () => this.timesAudioTime.node.textContent = this.viewTime(this.audio.duration));
-
         this.container = new Control(this, 'section', 'audio-player');
         this.controls = new Control(this.container.node, 'div', 'audio-player__controls');
         this.playButton = new Control(this.controls.node, 'button', 'audio-player__controls__button', '+');
@@ -65,38 +72,76 @@ export class AudioPlayerCustomHTML extends HTMLElement {
         this.lists = new Control(this.container.node, 'div', 'audio-player__lists');
         this.playListWrap = new Control(this.lists.node, 'div', ['audio-player__lists__play-list', 'list']);
         this.playListTitle = new Control(this.playListWrap.node, 'h4', 'list__title', 'Play List');
+        this.playListUl = new Control(this.playListWrap.node, 'ul', 'audio-player__lists__play-list__list');
         this.waitingList = new Control(this.lists.node, 'h3', ['audio-player__lists__waiting-list', 'list']);
         this.waitingListTitle = new Control(this.waitingList.node, 'h4', 'list__title', 'Waiting list');
-        this.addAudio(this.waitingList.node, this.playList);
+        this.addWaitAudioList(this.waitingList.node, this.playList);
     }
 
     disconnectedCallback() {
         // браузер вызывает этот метод при удалении элемента из документа
         // (может вызываться много раз, если элемент многократно добавляется/удаляется)
+
     }
 
     attributeChangedCallback(name: any, oldValue: any, newValue: any) {
 
     }
 
-    addAudio(perent: HTMLElement, items: IPlayList[]): void {
+    addWaitAudioList(perent: HTMLElement, items: IPlayList[]): void {
         const ul = new Control(perent, 'ul', 'items-list');
-        items.forEach(item => {
-            const li = new Control(ul.node, 'li', 'items-list__item');
-            const audio = new Audio();
-            audio.src = item.src;
-            const svg = document.createElementNS(`http://www.w3.org/2000/svg`, "svg");
-            svg.setAttribute('viewBox', '0 0 30 15.7');
-            svg.innerHTML = `<path d="M29.7,1.4l-14,14c-0.4,0.4-1,0.4-1.4,0l-14-14c-0.4-0.4-0.4-1,0-1.4h29.4C30.1,0.4,30.1,1,29.7,1.4z"/>
-            `;
-            li.node.appendChild(svg);
-            const itemInfo = new Control(li.node, 'div', 'items-list__item__info');
-            const name = new Control(itemInfo.node, 'p', '', item.title);
-            const time = new Control(itemInfo.node, 'p', '');
-            audio.addEventListener('loadedmetadata', () => time.node.textContent = this.viewTime(audio.duration));
-
+        items.forEach((item, i) => {
+            this.addWaitAudioItem(ul.node, item, i);
         });
     }
+
+    addWaitAudioItem(perent: HTMLElement, item: IPlayList, i: number) {
+        const li = new Control(perent, 'li', 'items-list__item');
+        const audio = new Audio();
+        audio.src = item.src;
+        const svg = document.createElementNS(`http://www.w3.org/2000/svg`, "svg");
+        svg.setAttribute('viewBox', '0 0 30 15.7');
+        svg.innerHTML = `<path d="M29.7,1.4l-14,14c-0.4,0.4-1,0.4-1.4,0l-14-14c-0.4-0.4-0.4-1,0-1.4h29.4C30.1,0.4,30.1,1,29.7,1.4z"/>
+        `;
+        li.node.appendChild(svg);
+        const itemInfo = new Control(li.node, 'div', 'items-list__item__info');
+        const name = new Control(itemInfo.node, 'p', '', item.title);
+        const time = new Control(itemInfo.node, 'p', '');
+        audio.onloadedmetadata = () => {
+            time.node.textContent = this.viewTime(audio.duration);
+            audio.onloadedmetadata = null;
+        }
+
+        const info: AudioItem = {
+            item: item,
+            icon: svg,
+            list: li,
+        };
+
+        this.waitListItems.push(info);
+        svg.onclick = () => this.onClick(info);
+    }
+
+    addAudioItem(perent: HTMLElement, item: IPlayList) {
+        const li = new Control(perent, 'li', 'play-list-item');
+        const audio = new Audio();
+        audio.src = item.src;
+        const icon = new Control(li.node, 'div', 'play-list-item__icon');
+
+        const itemInfo = new Control(li.node, 'div', 'play-list-item__info');
+        const name = new Control(itemInfo.node, 'p', '', item.title);
+        const time = new Control(itemInfo.node, 'p', '');
+        audio.onloadedmetadata = () => {
+            time.node.textContent = this.viewTime(audio.duration);
+            audio.onloadedmetadata = null;
+        }
+        const svg = document.createElementNS(`http://www.w3.org/2000/svg`, "svg");
+        svg.setAttribute('viewBox', '0 0 30 15.7');
+        svg.innerHTML = `<path d="M29.7,1.4l-14,14c-0.4,0.4-1,0.4-1.4,0l-14-14c-0.4-0.4-0.4-1,0-1.4h29.4C30.1,0.4,30.1,1,29.7,1.4z"/>
+        `;
+        li.node.appendChild(svg);
+    }
+
 
     update() { }
 
@@ -122,4 +167,15 @@ export class AudioPlayerCustomHTML extends HTMLElement {
         return minView + ':' + secView;
     }
 
+    onClick = (info: AudioItem): void => {
+        info.icon.onclick = null;
+        info.list.destroy();
+        this.playListItems.push(info.item);
+
+        this.waitListItems = this.waitListItems.filter(el => el !== info);
+        this.addAudioItem(this.playListUl.node, info.item);
+    }
+    onClickPlay = (): void => {
+
+    }
 }
