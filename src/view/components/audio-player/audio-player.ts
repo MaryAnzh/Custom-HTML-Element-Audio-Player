@@ -38,8 +38,6 @@ export class AudioPlayerCustomHTML extends HTMLElement {
 
     constructor() {
         super();
-
-        //this.audio.src = 'assets/audio/Christmas_Time_-_Jingle_Bell_Rock_(musmore.com).mp3';
     }
 
     connectedCallback() {
@@ -60,6 +58,8 @@ export class AudioPlayerCustomHTML extends HTMLElement {
 
         this.playListWrap = new Control(this.container.node, 'div', 'audio-player__play-list');
         this.playListTitle = new Control(this.playListWrap.node, 'h3', 'audio-player__play-list__title', 'Play List');
+
+        this.audio.src = this.playList[0].src;
     }
 
     disconnectedCallback() {
