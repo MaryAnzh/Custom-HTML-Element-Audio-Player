@@ -1,4 +1,5 @@
 import { Control } from '../../../service/control';
+import { IPlayList } from '../../../data/play-list';
 
 export class AudioPlayerCustomHTML extends HTMLElement {
     private audio = new Audio();
@@ -15,25 +16,30 @@ export class AudioPlayerCustomHTML extends HTMLElement {
     private timesAudioTime: Control;
 
     private soundBar: Control;
-    private playList: Control;
-    isPlay = false;
+    private soundBarRunner: Control;
 
+    private playListWrap: Control;
+    private playListTitle: Control;
+
+    isPlay = false;
     static observedAttributes = [
-        'playButtonSize',
+        'playList',
+
     ];
 
-    get playButtonSize(): number {
-        return +this.getAttribute('playButtonSize');
+    get playList(): IPlayList[] {
+        const list = JSON.parse(this.getAttribute('playList'));
+        return list;
     }
 
-    set playButtonSize(value: number) {
-        this.setAttribute('playButtonSize', value.toString());
+    set playList(value: IPlayList[]) {
+        this.setAttribute('playList', JSON.stringify(value));
     }
 
     constructor() {
         super();
 
-        this.audio.src = 'assets/audio/Christmas_Time_-_Jingle_Bell_Rock_(musmore.com).mp3';
+        //this.audio.src = 'assets/audio/Christmas_Time_-_Jingle_Bell_Rock_(musmore.com).mp3';
     }
 
     connectedCallback() {
@@ -50,7 +56,10 @@ export class AudioPlayerCustomHTML extends HTMLElement {
         this.timesAudioTime = new Control(this.times.node, 'p', 'audio-player__controls__times__audio-time', '00:00');
 
         this.soundBar = new Control(this.controls.node, 'div', 'audio-player__controls__sound-bar');
-        this.playList = new Control(this.container.node, 'div', 'audio-player__play-list');
+        this.soundBarRunner = new Control(this.soundBar.node, 'div', 'audio-player__controls__sound-bar__runner');
+
+        this.playListWrap = new Control(this.container.node, 'div', 'audio-player__play-list');
+        this.playListTitle = new Control(this.playListWrap.node, 'h3', 'audio-player__play-list__title', 'Play List');
     }
 
     disconnectedCallback() {

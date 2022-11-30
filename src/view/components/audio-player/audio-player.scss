@@ -66,14 +66,39 @@
         }
 
         &__sound-bar {
+            position: relative;
             width: 50px;
-            padding: 5px 10px;
-            border: 1px solid white;
+            display: flex;
+            align-items: center;
+            padding: 10px;
+
+            &::before {
+                content: '';
+                position: absolute;
+                left: 0;
+                width: 100%;
+                height: 2px;
+                background: lightblue;
+            }
+
+            &__runner {
+                position: absolute;
+                right: 0;
+                width: 6px;
+                height: 10px;
+                border-radius: 4px;
+                background: white;
+            }
         }
     }
 
     &__play-list {
-        padding: 10px;
-        border: 1px solid white;
+        padding: 10px 0;
+
+        &__title {
+            color: white;
+            padding: 10px 0;
+
+        }
     }
 }
