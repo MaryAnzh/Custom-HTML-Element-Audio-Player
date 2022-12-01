@@ -5,6 +5,7 @@ import { Main } from './pages/main/main';
 import { About } from './pages/about/about';
 import { NotFound } from './pages/not-found/not-found';
 import { translator } from '../service/translator/translator';
+import {IDictionary} from '../service/translator/dictionary.interface'
 
 class App extends Control {
     private header: Header;
@@ -57,12 +58,11 @@ class App extends Control {
         }
     }
 
-    translate = (langObj: Object): void => {
-        //const langObj = translator.translate(lang);
+    translate = (dictionary: IDictionary): void => {
         
-        this.header.translate(langObj);
+        this.header.translate(dictionary);
         if (this.currentPage) {
-            this.currentPage.translate(langObj);
+            this.currentPage.translate(dictionary);
         }
     }
 

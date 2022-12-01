@@ -1,10 +1,11 @@
 import { Control } from "../../../service/control";
 import { playListData } from '../../../data/play-list';
 import { AudioPlayerCustomHTML } from "../../components/audio-player/audio-player";
+import { IDictionary } from "../../../service/translator/dictionary.interface";
 
 export class Main extends Control {
     public name: string = 'main-page';
-    private perentKey = 'MAIN';
+    private perentKey: keyof IDictionary = 'MAIN';
 
     private title: Control;
     private audio: AudioPlayerCustomHTML;
@@ -20,8 +21,9 @@ export class Main extends Control {
         this.audio.playList = playListData;
     }
 
-    translate(config: any): void {
-        this.title.node.textContent = config[this.perentKey]['TITLE'];
+    translate(dictionary: IDictionary): void {
+        const titleKey: keyof IDictionary['MAIN'] = 'TITLE';
+        this.title.node.textContent = dictionary.MAIN[titleKey];
     }
 
     destroy: () => void = () => {
