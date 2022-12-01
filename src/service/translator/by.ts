@@ -1,4 +1,6 @@
-export const by = {
+import { IDictionary } from './dictionary.interface';
+
+export const by: IDictionary = {
     NAV: {
         MAIN: 'галоўная',
         ABOUT: 'аб праекце'

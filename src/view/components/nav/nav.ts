@@ -9,7 +9,7 @@ export class Nav extends Control {
         { name: 'about', key: 'ABOUT' },
     ];
 
-    private perentKey: keyof IDictionary = 'NAV';
+    private nodeKey: keyof IDictionary = 'NAV';
 
     public navItems: IElementTranslate[] = [];
 
@@ -21,16 +21,15 @@ export class Nav extends Control {
             const li = new Control(this._ul.node, 'li', 'nav__list__item', '', null);
             const link = i === 0 ? '#/' : `#/${el.name}`;
             const a = new Control(li.node, 'a', 'nav__list__item__link', '', [{ name: 'href', value: link }]);
-            this.navItems.push({ element: a.node, perentKey: this.perentKey, elementKey: el.key });
+            this.navItems.push({ element: a.node, perentKey: this.nodeKey, elementKey: el.key });
         });
     }
 
     translate(dictionary: IDictionary): void {
-        this.navItems.forEach((el) => {
-            const key = el.elementKey as keyof IDictionary['NAV'];
-
+        this.navItems.forEach((item) => {
+            const key = item.elementKey as keyof IDictionary['NAV'];
             const text = dictionary.NAV[key];
-            el.element.textContent = text;
+            item.element.textContent = text;
         });
     }
 }

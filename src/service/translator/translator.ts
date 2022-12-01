@@ -9,7 +9,7 @@ type LangType = "en" | "ru" | "by" | string;
 class Translator {
     private _lang: LangType;
     public langs: string[];
-    onChange: Signal<typeof en> = new Signal();    
+    onChange: Signal<IDictionary> = new Signal();    
 
     constructor() {
         this.langs = ['en', 'ru', 'by'];
