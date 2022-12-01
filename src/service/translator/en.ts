@@ -1,4 +1,6 @@
-export const en = {
+import { IDictionary } from './dictionary.interface';
+
+export const en: IDictionary = {
     NAV: {
         MAIN: 'main',
         ABOUT: 'about'

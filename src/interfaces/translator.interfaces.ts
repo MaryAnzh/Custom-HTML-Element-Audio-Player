@@ -1,3 +1,4 @@
+ 
  export interface IElementTranslate {
     element: HTMLElement,
     perentKey: string,

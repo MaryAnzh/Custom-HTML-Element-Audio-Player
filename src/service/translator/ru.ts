@@ -1,4 +1,6 @@
-export const ru = {
+import { IDictionary } from "./dictionary.interface";
+
+export const ru: IDictionary = {
     NAV: {
         MAIN: 'главная',
         ABOUT: 'о проекте',

@@ -1,14 +1,15 @@
 import { Control } from "../../../service/control";
 import { IElementTranslate } from '../../../interfaces/translator.interfaces';
-
+import { IDictionary } from "../../../service/translator/dictionary.interface";
 
 export class Nav extends Control {
     private _ul: Control;
-    private _navLists: { name: string, key: string }[] = [
+    private _navLists: { name: string, key: keyof IDictionary['NAV'] }[] = [
         { name: 'main', key: 'MAIN' },
         { name: 'about', key: 'ABOUT' },
     ];
-    private perentKey = 'NAV';
+
+    private perentKey: keyof IDictionary = 'NAV';
 
     public navItems: IElementTranslate[] = [];
 
@@ -24,9 +25,11 @@ export class Nav extends Control {
         });
     }
 
-    translate(config: any): void {
+    translate(dictionary: IDictionary): void {
         this.navItems.forEach((el) => {
-            const text = config[el.perentKey][el.elementKey];
+            const key = el.elementKey as keyof IDictionary['NAV'];
+
+            const text = dictionary.NAV[key];
             el.element.textContent = text;
         });
     }
