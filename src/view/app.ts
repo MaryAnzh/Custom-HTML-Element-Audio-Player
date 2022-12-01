@@ -12,14 +12,13 @@ class App extends Control {
     private footer: Footer;
     public main: Control;
     private currentPage: Main | About | NotFound | null = null;
-    // private lang: string;
 
     constructor() {
         super(document.body, 'div', 'wrapper');
 
         this.header = new Header(translator.langs);
         this.footer = new Footer();
-        this.main = new Control(null, 'main', 'main', '', null);
+        this.main = new Control(null, 'main', 'main');
         this.node.append(this.header.node, this.main.node, this.footer.node);
 
         this.header.onChange = (lang) => {
@@ -30,7 +29,6 @@ class App extends Control {
     }
 
     addPage(page: string) {
-        console.log('Рисуем страницу');
         this.header.selectCurrentPage(page);
         let newPage: Main | About | NotFound | null = null;
 
@@ -49,7 +47,7 @@ class App extends Control {
 
         this.currentPage = newPage;
         this.main.node.appendChild(newPage.node);
-        this.translate(translator.translate(translator.lang));
+        translator.lang = 'en';
     }
 
     removePage() {
