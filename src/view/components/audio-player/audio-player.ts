@@ -7,8 +7,9 @@ type AudioItem = {
     list: Control,
     time: number;
 }
+
 type onclickSet = {
-    playItem: () => void
+    playStopAudio: () => void
 }
 
 export class AudioPlayerCustomHTML extends HTMLElement {
@@ -103,12 +104,12 @@ export class AudioPlayerCustomHTML extends HTMLElement {
 
     onClick = (type: keyof onclickSet, item: IPlayItem, audio: HTMLAudioElement): void => {
         const onclics = {
-            playItem: this.playItem,
+            playStopAudio: this.playStopAudio,
         }
         onclics[type](item, audio);
     }
 
-    playItem = (item: IPlayItem, audio: HTMLAudioElement): void => {
+    playStopAudio = (item: IPlayItem, audio: HTMLAudioElement): void => {
         if (this.audio === audio) {
             if (this.isPlay) {
                 this.play();
