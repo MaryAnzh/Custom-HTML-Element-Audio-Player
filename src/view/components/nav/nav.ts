@@ -28,8 +28,7 @@ export class Nav extends Control {
     translate(dictionary: IDictionary): void {
         this.navItems.forEach((item) => {
             const key = item.elementKey as keyof IDictionary['NAV'];
-            const text = dictionary.NAV[key];
-            item.element.textContent = text;
+            item.element.textContent = dictionary.NAV[key];
         });
     }
 }
