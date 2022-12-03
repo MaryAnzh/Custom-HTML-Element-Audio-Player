@@ -22,6 +22,7 @@ export class AudioPlayerCustomHTML extends HTMLElement {
     private playListUl: Control;
     private waitingList: Control;
     private waitingListTitle: Control;
+    private waitingListUl: Control;
 
     //Attributes
     static observedAttributes = [
@@ -43,9 +44,7 @@ export class AudioPlayerCustomHTML extends HTMLElement {
     }
 
     connectedCallback() {
-        console.log(this.playList);
         this.waitListItems = this.updateAudioList(this.playList);
-        console.log(this.waitListItems);
 
         //audio container
         this.container = new Control(this, 'section', 'audio-player');
@@ -58,6 +57,12 @@ export class AudioPlayerCustomHTML extends HTMLElement {
         this.playListUl = new Control(this.playListWrap.node, 'ul', 'audio-player__lists__play-list__list');
         this.waitingList = new Control(this.lists.node, 'h3', ['audio-player__lists__waiting-list', 'list']);
         this.waitingListTitle = new Control(this.waitingList.node, 'h4', 'list__title', 'Waiting list');
+        this.waitingListUl = new Control(this.waitingList.node, 'ul', 'list__ul');
+
+        this.waitListItems.forEach(item => {
+            const li = new WaiteListItem(item);
+            this.waitingListUl.node.appendChild(li.node);
+        });
     }
 
     disconnectedCallback() {
