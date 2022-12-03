@@ -19,7 +19,7 @@ export class AudioControls extends Control {
     private soundBar: Control;
     private soundBarRunner: Control;
 
-    public isPlay = false;
+    private isPlay = false;
 
     constructor(parent: HTMLElement) {
         super(parent, 'div', 'audio');
@@ -41,19 +41,23 @@ export class AudioControls extends Control {
         this.soundBarRunner = new Control(this.soundBar.node, 'div', 'audio__controls__sound-bar__runner');
     }
 
-    update(item: IPlayItem) {
+    public update(item: IPlayItem) {
         this._audio.src = item.src;
         this.audioTime.node.textContent = item.time ? Utils.viewTime(item.time) : '00:00';
         this.audioTitle.node.textContent = item.title;
     }
 
-    play(): void {
+    public play(): void {
         this._audio.play();
         this.isPlay = true;
     }
 
-    pause(): void {
+    public pause(): void {
         this._audio.pause();
         this.isPlay = false;
     }
+
+    private timerOn(): void { }
+
+    private timerStop(): void {}
 }
