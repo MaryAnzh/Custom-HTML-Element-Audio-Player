@@ -28,41 +28,8 @@
                 padding: 0 3px;
                 width: 100%;
             }
-
-            .items-list {
-                padding: 10px 5px;
-
-                &__item {
-                    font-weight: normal;
-                    padding: 10px 0;
-                    display: flex;
-
-                    svg {
-                        width: 15px;
-                        transform: rotate(90deg);
-                        fill: lightblue;
-                        cursor: pointer;
-                        transition: .3s;
-
-                        &:hover {
-                            fill: white;
-                        }
-                    }
-
-                    &__info {
-                        width: 100%;
-                        padding-left: 10px;
-                        display: flex;
-                        justify-content: space-between;
-
-                        p {
-                            color: lightblue;
-                        }
-                    }
-
-
-                }
-
+            &__ul {
+                padding: 5px 10px;
             }
         }
 

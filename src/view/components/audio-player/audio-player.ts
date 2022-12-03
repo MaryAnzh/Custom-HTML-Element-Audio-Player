@@ -43,8 +43,8 @@ export class AudioPlayerCustomHTML extends HTMLElement {
         this.playListItems = [];
     }
 
-    connectedCallback() {
-        this.waitListItems = this.updateAudioList(this.playList);
+    async connectedCallback() {
+        this.waitListItems = await this.updateAudioList(this.playList);
 
         //audio container
         this.container = new Control(this, 'section', 'audio-player');
@@ -57,7 +57,7 @@ export class AudioPlayerCustomHTML extends HTMLElement {
         this.playListUl = new Control(this.playListWrap.node, 'ul', 'audio-player__lists__play-list__list');
         this.waitingList = new Control(this.lists.node, 'h3', ['audio-player__lists__waiting-list', 'list']);
         this.waitingListTitle = new Control(this.waitingList.node, 'h4', 'list__title', 'Waiting list');
-        this.waitingListUl = new Control(this.waitingList.node, 'ul', 'list__ul');
+        this.waitingListUl = new Control(this.waitingList.node, 'ul', 'items-list');
 
         this.waitListItems.forEach(item => {
             const li = new WaiteListItem(item);
@@ -100,14 +100,21 @@ export class AudioPlayerCustomHTML extends HTMLElement {
         // }
     }
 
-    updateAudioList(audioList: IPlayItem[]): IPlayItem[] {
-        return audioList.reduce((prev: IPlayItem[], curr: IPlayItem) => {
+    async updateAudioList(audioList: IPlayItem[]): Promise<IPlayItem[]> {
+        const newAudioList: IPlayItem[] = [];
+        for (let i = 0; i < audioList.length; i++) {
+            const item = audioList[i];
             const audio = new Audio();
-            curr.audio = audio;
-            audio.src = curr.src;
-            audio.onloadedmetadata = () => curr.time = audio.duration;
-            prev.push(curr);
-            return prev;
-        }, []);
+            item.audio = audio;
+            audio.src = item.src;
+            const time: number = await new Promise((resolve): void => {
+                audio.onloadedmetadata = (): void => {
+                    resolve(audio.duration);
+                }
+            })
+            item.time = time;
+            newAudioList.push(item);
+        }
+        return newAudioList;
     }
 }
