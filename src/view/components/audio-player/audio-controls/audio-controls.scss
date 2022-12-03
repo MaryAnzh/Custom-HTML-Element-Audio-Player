@@ -4,26 +4,41 @@
         display: flex;
         flex-direction: column;
 
-        &__button {
-            width: 30px;
-            height: 30px;
-            margin-bottom: 10px;
-            border-radius: 50px;
-            border: none;
-            outline: none;
-            background: lightblue;
-            color: blue;
-            transition: .3s;
-            cursor: pointer;
+        &__top {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
 
-            &:hover {
-                background: rgb(197, 223, 231);
+            &__button {
+                width: 30px;
+                height: 30px;
+                margin-bottom: 10px;
+                border-radius: 50px;
+                border: none;
+                outline: none;
+                background: lightblue;
+                color: blue;
+                transition: .3s;
+                cursor: pointer;
+
+                &:hover {
+                    background: rgb(197, 223, 231);
+                }
+
+                &:active {
+                    background: white;
+                }
             }
 
-            &:active {
-                background: white;
+            &__title {
+                width: calc(100% - 50px);
+                text-overflow: clip;
+                overflow: hidden;
+                white-space: nowrap;
             }
         }
+
+
 
         &__time-bar {
             position: relative;

@@ -1,6 +1,7 @@
 import { Control } from '../../../service/control';
 import { IPlayItem } from '../../../interfaces/play-item.interface';
 import { AudioControls } from './audio-controls/audio-controls'
+import { Utils } from './utils';
 
 type AudioItem = {
     item: IPlayItem,
@@ -108,18 +109,5 @@ export class AudioPlayerCustomHTML extends HTMLElement {
             this.update();
             this.play();
         }
-    }
-
-    viewTime(time: number): string {
-        const t = time * 1000;
-        let min = Math.floor(t / 1000 / 60);
-        let sec = Math.floor((t - (min * 1000 * 60)) / 1000);
-        if (sec > 59) {
-            min += 1;
-            sec = sec - 60;
-        }
-        const minView = min < 10 ? `0${min}` : min;
-        const secView = sec < 10 ? `0${sec}` : sec;
-        return minView + ':' + secView;
     }
 }
