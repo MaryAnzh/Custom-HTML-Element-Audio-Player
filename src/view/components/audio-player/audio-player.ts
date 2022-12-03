@@ -1,6 +1,7 @@
 import { Control } from '../../../service/control';
 import { IPlayItem } from '../../../interfaces/play-item.interface';
 import { AudioControls } from './audio-controls/audio-controls'
+import { WaiteListItem } from './wait-item/wait-item'
 
 type onclickSet = {
     playStopAudio: () => void
@@ -42,7 +43,9 @@ export class AudioPlayerCustomHTML extends HTMLElement {
     }
 
     connectedCallback() {
-        this.waitListItems = this.playList;;
+        console.log(this.playList);
+        this.waitListItems = this.updateAudioList(this.playList);
+        console.log(this.waitListItems);
 
         //audio container
         this.container = new Control(this, 'section', 'audio-player');
@@ -90,5 +93,16 @@ export class AudioPlayerCustomHTML extends HTMLElement {
         //     this.update();
         //     this.play();
         // }
+    }
+
+    updateAudioList(audioList: IPlayItem[]): IPlayItem[] {
+        return audioList.reduce((prev: IPlayItem[], curr: IPlayItem) => {
+            const audio = new Audio();
+            curr.audio = audio;
+            audio.src = curr.src;
+            audio.onloadedmetadata = () => curr.time = audio.duration;
+            prev.push(curr);
+            return prev;
+        }, []);
     }
 }
