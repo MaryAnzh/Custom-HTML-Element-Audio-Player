@@ -2,6 +2,7 @@ import { Control } from '../../../service/control';
 import { IPlayItem } from '../../../interfaces/play-item.interface';
 import { AudioControls } from './audio-controls/audio-controls'
 import { WaiteListItem } from './wait-item/wait-item'
+import { PlayItem } from './play-list-item/play-list-item';
 
 type OnclickSet = {
     moveItemToPlayList: (item: IPlayItem) => void,
@@ -11,7 +12,7 @@ type OnclickSet = {
 export class AudioPlayerCustomHTML extends HTMLElement {
     //data
     private currentAudioItem: null | IPlayItem = null;
-    private waitListItems: IPlayItem[];
+    private waitListItems: IPlayItem[] = [];
     private playListItems: IPlayItem[];
 
     //HTMLElements
@@ -62,9 +63,11 @@ export class AudioPlayerCustomHTML extends HTMLElement {
 
         this.waitListItems.forEach(item => {
             const li = new WaiteListItem(item);
+            item.item = li;
             li.onClick = () => this.onClick('moveItemToPlayList', item);
             this.waitingListUl.node.appendChild(li.node);
         });
+        console.log(this.waitListItems)
     }
 
     disconnectedCallback() {
@@ -75,7 +78,7 @@ export class AudioPlayerCustomHTML extends HTMLElement {
     attributeChangedCallback(name: any, oldValue: any, newValue: any) {
 
     }
-    test = (string: string, item: IPlayItem) => { console.log(item); console.log(string) }
+
     onClick = (type: keyof OnclickSet, item: IPlayItem): void => {
         const onclics: OnclickSet = {
             moveItemToPlayList: this.moveItemToPlayList,
@@ -103,8 +106,15 @@ export class AudioPlayerCustomHTML extends HTMLElement {
         // }
     }
 
-    moveItemToPlayList(item: IPlayItem): void {
-        
+    moveItemToPlayList = (item: IPlayItem): void => {
+        console.log(this.waitListItems);
+        this.waitListItems = this.waitListItems.filter(el => el !== item);
+        // this.playListItems.push(item);
+        // const li = new PlayItem(item);
+        // const waitListOtem = item.item;
+        // item.item = li;
+        // waitListOtem.destroy();
+        // this.playListUl.node.appendChild(li.node);
     }
 
     async updateAudioList(audioList: IPlayItem[]): Promise<IPlayItem[]> {
