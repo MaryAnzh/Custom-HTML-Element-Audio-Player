@@ -3,8 +3,9 @@ import { IPlayItem } from '../../../interfaces/play-item.interface';
 import { AudioControls } from './audio-controls/audio-controls'
 import { WaiteListItem } from './wait-item/wait-item'
 
-type onclickSet = {
-    playStopAudio: () => void
+type OnclickSet = {
+    moveItemToPlayList: (item: IPlayItem) => void,
+    playStopAudio: (item: IPlayItem) => void,
 }
 
 export class AudioPlayerCustomHTML extends HTMLElement {
@@ -61,6 +62,7 @@ export class AudioPlayerCustomHTML extends HTMLElement {
 
         this.waitListItems.forEach(item => {
             const li = new WaiteListItem(item);
+            li.onClick = () => this.onClick('moveItemToPlayList', item);
             this.waitingListUl.node.appendChild(li.node);
         });
     }
@@ -73,15 +75,16 @@ export class AudioPlayerCustomHTML extends HTMLElement {
     attributeChangedCallback(name: any, oldValue: any, newValue: any) {
 
     }
-
-    onClick = (type: keyof onclickSet, item: IPlayItem, audio: HTMLAudioElement): void => {
-        const onclics = {
+    test = (string: string, item: IPlayItem) => { console.log(item); console.log(string) }
+    onClick = (type: keyof OnclickSet, item: IPlayItem): void => {
+        const onclics: OnclickSet = {
+            moveItemToPlayList: this.moveItemToPlayList,
             playStopAudio: this.playStopAudio,
         }
-        onclics[type](item, audio);
+        onclics[type](item);
     }
 
-    playStopAudio = (item: IPlayItem, audio: HTMLAudioElement): void => {
+    playStopAudio = (item: IPlayItem): void => {
         // if (this.audio === audio) {
         //     if (this.isPlay) {
         //         this.play();
@@ -98,6 +101,10 @@ export class AudioPlayerCustomHTML extends HTMLElement {
         //     this.update();
         //     this.play();
         // }
+    }
+
+    moveItemToPlayList(item: IPlayItem): void {
+        
     }
 
     async updateAudioList(audioList: IPlayItem[]): Promise<IPlayItem[]> {
