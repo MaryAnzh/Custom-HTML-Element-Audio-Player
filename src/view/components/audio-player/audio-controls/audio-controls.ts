@@ -57,7 +57,7 @@ export class AudioControls extends Control {
         this.isPlay = false;
     }
 
-    private timerOn(): void { }
+    private startTimer(): void { }
 
-    private timerStop(): void {}
+    private stopTimer(): void {}
 }
