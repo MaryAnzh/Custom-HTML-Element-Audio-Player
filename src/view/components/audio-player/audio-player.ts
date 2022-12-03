@@ -1,24 +1,16 @@
 import { Control } from '../../../service/control';
 import { IPlayItem } from '../../../interfaces/play-item.interface';
 import { AudioControls } from './audio-controls/audio-controls'
-import { Utils } from './utils';
-
-type AudioItem = {
-    item: IPlayItem,
-    icon: SVGSVGElement,
-    list: Control,
-    time: number;
-}
 
 type onclickSet = {
     playStopAudio: () => void
 }
 
 export class AudioPlayerCustomHTML extends HTMLElement {
-    private audio = new Audio();
-    private currwntAudioInfo: null | IPlayItem = null;
-    private waitListItems: AudioItem[] = [];
-    private playListItems: IPlayItem[] = [];
+    //data
+    private currentAudioItem: null | IPlayItem = null;
+    private waitListItems: IPlayItem[];
+    private playListItems: IPlayItem[];
 
     //HTMLElements
     private container: Control;
@@ -30,10 +22,9 @@ export class AudioPlayerCustomHTML extends HTMLElement {
     private waitingList: Control;
     private waitingListTitle: Control;
 
-    isPlay = false;
+    //Attributes
     static observedAttributes = [
         'playList',
-
     ];
 
     get playList(): IPlayItem[] {
@@ -47,13 +38,17 @@ export class AudioPlayerCustomHTML extends HTMLElement {
 
     constructor() {
         super();
+        this.playListItems = [];
     }
 
     connectedCallback() {
+        this.waitListItems = this.playList;;
+
+        //audio container
         this.container = new Control(this, 'section', 'audio-player');
-
+        //audio controls
         this.controls = new AudioControls(this.container.node);
-
+        //audio Lists
         this.lists = new Control(this.container.node, 'div', 'audio-player__lists');
         this.playListWrap = new Control(this.lists.node, 'div', ['audio-player__lists__play-list', 'list']);
         this.playListTitle = new Control(this.playListWrap.node, 'h4', 'list__title', 'Play List');
@@ -71,20 +66,6 @@ export class AudioPlayerCustomHTML extends HTMLElement {
 
     }
 
-    update() {
-
-    }
-
-    play() {
-        this.audio.play();
-        this.isPlay = true;
-    }
-
-    pause() {
-        this.audio.pause();
-        this.isPlay = false;
-    }
-
     onClick = (type: keyof onclickSet, item: IPlayItem, audio: HTMLAudioElement): void => {
         const onclics = {
             playStopAudio: this.playStopAudio,
@@ -93,21 +74,21 @@ export class AudioPlayerCustomHTML extends HTMLElement {
     }
 
     playStopAudio = (item: IPlayItem, audio: HTMLAudioElement): void => {
-        if (this.audio === audio) {
-            if (this.isPlay) {
-                this.play();
-            } else {
-                this.pause();
-            }
-        } else {
-            if (this.isPlay) {
-                this.audio.pause();
-                this.audio.currentTime = 0;
-            }
-            this.currwntAudioInfo = item;
-            this.audio = audio;
-            this.update();
-            this.play();
-        }
+        // if (this.audio === audio) {
+        //     if (this.isPlay) {
+        //         this.play();
+        //     } else {
+        //         this.pause();
+        //     }
+        // } else {
+        //     if (this.isPlay) {
+        //         this.audio.pause();
+        //         this.audio.currentTime = 0;
+        //     }
+        //     this.currwntAudioInfo = item;
+        //     this.audio = audio;
+        //     this.update();
+        //     this.play();
+        // }
     }
 }

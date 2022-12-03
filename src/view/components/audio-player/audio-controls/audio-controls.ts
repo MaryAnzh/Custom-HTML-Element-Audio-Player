@@ -59,5 +59,5 @@ export class AudioControls extends Control {
 
     private startTimer(): void { }
 
-    private stopTimer(): void {}
+    private (): void {}
 }
