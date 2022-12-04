@@ -67,7 +67,6 @@ export class AudioPlayerCustomHTML extends HTMLElement {
             li.onClick = () => this.onClick('moveItemToPlayList', item);
             this.waitingListUl.node.appendChild(li.node);
         });
-        console.log(this.waitListItems)
     }
 
     disconnectedCallback() {
@@ -80,11 +79,11 @@ export class AudioPlayerCustomHTML extends HTMLElement {
     }
 
     onClick = (type: keyof OnclickSet, item: IPlayItem): void => {
-        const onclics: OnclickSet = {
+        const onclickSet: OnclickSet = {
             moveItemToPlayList: this.moveItemToPlayList,
             playStopAudio: this.playStopAudio,
         }
-        onclics[type](item);
+        onclickSet[type](item);
     }
 
     playStopAudio = (item: IPlayItem): void => {
@@ -99,7 +98,6 @@ export class AudioPlayerCustomHTML extends HTMLElement {
         //         this.audio.pause();
         //         this.audio.currentTime = 0;
         //     }
-        //     this.currwntAudioInfo = item;
         //     this.audio = audio;
         //     this.update();
         //     this.play();
@@ -110,9 +108,9 @@ export class AudioPlayerCustomHTML extends HTMLElement {
         this.waitListItems = this.waitListItems.filter(el => el !== item);
         this.playListItems.push(item);
         const li = new PlayItem(item);
-        const waitListOtem = item.item;
+        const waitListItem = item.item;
         item.item = li;
-        waitListOtem.destroy();
+        waitListItem.destroy();
         this.playListUl.node.appendChild(li.node);
         if (this.playListItems.length === 1) {
             li.active();
