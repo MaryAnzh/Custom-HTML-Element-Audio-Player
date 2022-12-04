@@ -12,7 +12,7 @@ export class PlayItem extends Control {
     public onClick: () => void;
 
     constructor(item: IPlayItem) {
-        super(null, 'li', 'items-list__item');
+        super(null, 'li', ['items-list__item', 'play-list-item']);
 
         this.playIcon = new Control(this.node, 'div', ['items-list__item__icon', 'not-active-item']);
         const playSVG = document.createElementNS(`http://www.w3.org/2000/svg`, "svg");
@@ -22,7 +22,7 @@ export class PlayItem extends Control {
         this.playIcon.node.appendChild(playSVG);
         this.playIcon.node.onclick = () => this.onClick();
 
-        this.container = new Control(this.node, 'div', 'items-list__item__info');
+        this.container = new Control(this.node, 'div', ['items-list__item__info', 'play-list-item__info']);
         this.title = new Control(this.container.node, 'p', '', item.title);
 
         const timeView = item.time ? Utils.viewTime(item.time) : '00:00';
@@ -37,11 +37,17 @@ export class PlayItem extends Control {
         this.arroyIcon.node.onclick = () => this.onClick();
     }
 
-    update() {
-
+    public active() {
+        this.playIcon.node.classList.remove('not-active-item');
+        this.playIcon.node.classList.add('active-item');
     }
 
-    destroy(): void {
+    public deactivate() {
+        this.playIcon.node.classList.remove('active-item');
+        this.playIcon.node.classList.add('not-active-item');
+    }
+
+    public destroy(): void {
         this.arroyIcon.node.onclick = null;
         this.playIcon.node.onclick = null;
         super.destroy();

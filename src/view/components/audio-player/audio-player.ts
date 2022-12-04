@@ -114,6 +114,9 @@ export class AudioPlayerCustomHTML extends HTMLElement {
         item.item = li;
         waitListOtem.destroy();
         this.playListUl.node.appendChild(li.node);
+        if (this.playListItems.length === 1) {
+            li.active();
+        }
     }
 
     async updateAudioList(audioList: IPlayItem[]): Promise<IPlayItem[]> {
