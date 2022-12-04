@@ -107,14 +107,13 @@ export class AudioPlayerCustomHTML extends HTMLElement {
     }
 
     moveItemToPlayList = (item: IPlayItem): void => {
-        console.log(this.waitListItems);
         this.waitListItems = this.waitListItems.filter(el => el !== item);
-        // this.playListItems.push(item);
-        // const li = new PlayItem(item);
-        // const waitListOtem = item.item;
-        // item.item = li;
-        // waitListOtem.destroy();
-        // this.playListUl.node.appendChild(li.node);
+        this.playListItems.push(item);
+        const li = new PlayItem(item);
+        const waitListOtem = item.item;
+        item.item = li;
+        waitListOtem.destroy();
+        this.playListUl.node.appendChild(li.node);
     }
 
     async updateAudioList(audioList: IPlayItem[]): Promise<IPlayItem[]> {
