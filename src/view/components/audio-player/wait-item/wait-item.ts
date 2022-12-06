@@ -3,25 +3,19 @@ import { Control } from '../../../../service/control'
 import { Utils } from '../utils';
 
 export class WaiteListItem extends Control {
+    public name: string = 'waitList';
+    public id: string;
+
     private icon: Control;
     private container: Control;
     private title: Control;
     private time: Control;
 
-    public audioInfo: IPlayItem;
-    public audio: HTMLAudioElement;
-    public audioTime: number;
     public onClick: () => void;
 
-    constructor(item: IPlayItem, audio: HTMLAudioElement, time: number) {
+    constructor(item: IPlayItem, time: number, id: string) {
         super(null, 'li', 'items-list__item');
-        this.audioInfo = {
-            title: item.title,
-            src: item.src,
-        };
- 
-        this.audio = audio;
-        this.audioTime = time;
+        this.id = id;
 
         this.icon = new Control(this.node, 'div', ['items-list__item__icon', 'arrow-to-left']);
         const svg = document.createElementNS(`http://www.w3.org/2000/svg`, "svg");

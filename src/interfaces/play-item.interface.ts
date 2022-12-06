@@ -6,6 +6,15 @@ export interface IPlayItem {
     src: string,
 }
 
+export interface IAudioPlayerItem {
+    id: string,
+    location: 'waitList' | 'playList',
+    title: string,
+    src: string,
+    audio: HTMLAudioElement,
+    time: number,
+}
+
 export interface IWaitListItem {
     title: string,
     src: string,

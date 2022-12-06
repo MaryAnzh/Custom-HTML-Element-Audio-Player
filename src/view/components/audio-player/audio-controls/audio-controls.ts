@@ -41,10 +41,10 @@ export class AudioControls extends Control {
         this.soundBarRunner = new Control(this.soundBar.node, 'div', 'audio__controls__sound-bar__runner');
     }
 
-    public update(item: IPlayItem, audio: HTMLAudioElement, time: number) {
-        this._audio = audio;
+    public update(title: string, time: number, audio: HTMLAudioElement) {
         this.audioTime.node.textContent = Utils.viewTime(time);
-        this.audioTitle.node.textContent = item.title;
+        this.audioTitle.node.textContent = title;
+        this._audio = audio;
     }
 
     public play(): void {

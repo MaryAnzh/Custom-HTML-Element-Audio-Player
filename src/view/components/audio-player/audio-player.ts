@@ -1,5 +1,5 @@
 import { Control } from '../../../service/control';
-import { IPlayItem, IWaitListItem, IPlayListItem } from '../../../interfaces/play-item.interface';
+import { IPlayItem, IWaitListItem, IPlayListItem, IAudioPlayerItem } from '../../../interfaces/play-item.interface';
 import { AudioControls } from './audio-controls/audio-controls'
 import { WaiteListItem } from './wait-item/wait-item'
 import { PlayItem } from './play-list-item/play-list-item';
@@ -10,9 +10,12 @@ type OnclickSet = {
 
 export class AudioPlayerCustomHTML extends HTMLElement {
     //data
-    private isAudioInPlayer: boolean = false;
-    private _waitListItems: IWaitListItem[];
-    private _playListItems: IPlayListItem[];
+    private _audioList: IAudioPlayerItem[];
+    private _waitListItems: WaiteListItem[];
+    private _playListItems: PlayItem[];
+
+    private isAudioPlay: boolean = false;
+    private audioItem: PlayItem | null = null;
 
     //HTMLElements
     private container: Control;
@@ -42,11 +45,13 @@ export class AudioPlayerCustomHTML extends HTMLElement {
     constructor() {
         super();
 
+        this._audioList = [];
         this._playListItems = [];
         this._waitListItems = [];
     }
 
     async connectedCallback() {
+
         //audio container
         this.container = new Control(this, 'section', 'audio-player');
         //audio controls
@@ -71,20 +76,24 @@ export class AudioPlayerCustomHTML extends HTMLElement {
                 }
             })
 
-            const li = new WaiteListItem(audioInfo, audio, time);
+            const id = `audioItem_${i}`;
+
+            const li = new WaiteListItem(audioInfo, time, id);
             li.onClick = () => this.onClick('moveItemToPlayList', li);
 
-            const item: IWaitListItem = {
+            const item: IAudioPlayerItem = {
+                id: id,
+                location: 'waitList',
                 title: audioInfo.title,
                 src: audioInfo.src,
-                item: li,
                 audio: audio,
                 time: time,
             }
 
-            this._waitListItems.push(item);
-            console.log(li.node);
+            this._waitListItems.push(li);
             this.waitingListUl.node.appendChild(li.node);
+
+            this._audioList.push(item);
         }
     }
 
@@ -97,36 +106,61 @@ export class AudioPlayerCustomHTML extends HTMLElement {
 
     }
 
-    onClick = (type: keyof OnclickSet, item: WaiteListItem): void => {
-        const onclickSet: OnclickSet = {
-            moveItemToPlayList: this.moveItemToPlayList,
+    onClick = (type: string, item: WaiteListItem | PlayItem): void => {
+        if (type === 'moveItemToPlayList') {
+            const i = <WaiteListItem>item;
+            this.moveItemToPlayList(i);
         }
-        onclickSet[type](item);
-    }
 
-    playStopAudio = (item: IPlayItem): void => {
-        // if (this.isAudioInPlayer) {
-        //     item.item.play();
-        // }
+        if (type === 'playStopAudio') {
+            const i = <PlayItem>item;
+            this.playStopAudio(i);
+        }
     }
 
     moveItemToPlayList = (item: WaiteListItem): void => {
-        const playListItem: IPlayListItem = {
-            title: item.audioInfo.title,
-            src: item.audioInfo.src,
-            audio: item.audio,
-            time: item.audioTime,
-            item: new PlayItem({ title: item.audioInfo.title, src: item.audioInfo.src }, item.audio, item.audioTime),
-        }
-
-        this._waitListItems = this._waitListItems.filter(el => el.src !== item.audioInfo.src);
+        this._waitListItems = this._waitListItems.filter(el => el !== item);
+        const id = item.id;
         item.destroy();
 
-        this.playListUl.node.appendChild(playListItem.item.node);
+        const audioItem = this._audioList.filter(el => el.id === id)[0];
+        audioItem.location = 'playList';
+        const playListItem = new PlayItem(audioItem.title, audioItem.time, id);
+
+        this.playListUl.node.appendChild(playListItem.node);
         this._playListItems.push(playListItem);
 
         if (this._playListItems.length === 1) {
-            playListItem.item.active();
+            playListItem.active();
+            this.audioItem = playListItem;
+            this.controls.update(audioItem.title, audioItem.time, audioItem.audio);
         }
+        playListItem.onClickPlayPause = () => this.onClick('playStopAudio', playListItem);
+    }
+
+    playStopAudio = (item: PlayItem): void => {
+
+        // if (this.audioItem === item) {
+        //     if (this.isAudioPlay) {
+        //         this.audioItem.pause();
+        //         this.isAudioPlay = false;
+        //     } else {
+        //         this.audioItem.play();
+        //         this.isAudioPlay = true;
+        //     }
+        // } else {
+        //     this.audioItem.deactivate();
+        //     //     if (this.isAudioPlay) {
+        //     //         this.audioItem.pause();
+        //     //         this.audioItem = item;
+        //     //     } else {
+        //     //         this.audioItem = item;
+        //     //         this.audioItem.play();
+        //     //         this.isAudioPlay = true;
+        //     //     }
+        //     this.audioItem = item;
+        //     //this.controls.update({ title: item., src: playListItem.src }, playListItem.time);
+        //     item.active();
+        // }
     }
 }

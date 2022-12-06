@@ -8,8 +8,9 @@
         display: flex;
 
         &__icon {
-            width: 15px;
-            height: 15px;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
             display: flex;
             align-items: center;
             cursor: pointer;
@@ -36,9 +37,6 @@
         }
 
         .active-item-pause {
-            width: 15px;
-            height: 15px;
-            border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -47,17 +45,18 @@
             svg {
                 fill: blue;
                 width: 10px;
+
+                &:hover {
+                    fill: blue;
+
+                }
             }
         }
 
         .active-item-play {
-            width: 15px;
-            height: 15px;
-            border-radius: 50%;
             position: relative;
             display: flex;
             align-items: center;
-            justify-content: space-around;
             background: lightblue;
 
             svg {
@@ -68,16 +67,22 @@
             &::after {
                 content: '';
                 position: absolute;
-                width: 1px;
-                height: 10px;
+                width: 3px;
+                height: 8px;
+                border-radius: 2px;
                 background: blue;
+            }
+
+            &::before {
+                left: 5px;
+            }
+
+            &::after {
+                right: 5px;
             }
         }
 
         .not-active-item {
-            width: 15px;
-            height: 15px;
-            border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -98,8 +103,6 @@
                 color: lightblue;
             }
         }
-
-
     }
 
 }
