@@ -57,6 +57,10 @@ export class AudioControls extends Control {
         this.isPlay = false;
     }
 
+    public resetAudioTime() {
+        this._audio.currentTime = 0;
+    }
+
     private startTimer(): void { }
 
     private(): void { }

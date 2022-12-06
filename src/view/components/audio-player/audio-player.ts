@@ -139,14 +139,15 @@ export class AudioPlayerCustomHTML extends HTMLElement {
     }
 
     playStopAudio = (item: PlayItem): void => {
-
         if (this.audioItem === item) {
             if (this.isAudioPlay) {
                 this.audioItem.viewPause();
                 this.isAudioPlay = false;
+                this.controls.pause();
             } else {
                 this.audioItem.viewPlay();
                 this.isAudioPlay = true;
+                this.controls.play();
             }
 
         } else {
@@ -154,17 +155,16 @@ export class AudioPlayerCustomHTML extends HTMLElement {
             const audioInfo: IAudioPlayerItem = this._audioList.filter(el => el.id === id)[0];
 
             this.audioItem.deactivate();
-            //     if (this.isAudioPlay) {
-            //         this.audioItem.pause();
-            //         this.audioItem = item;
-            //     } else {
-            //         this.audioItem = item;
-            //         this.audioItem.play();
-            //         this.isAudioPlay = true;
-            //     }
+            if (this.isAudioPlay) {
+                this.controls.pause();
+                this.controls.resetAudioTime();
+            }
             this.audioItem = item;
             this.controls.update(audioInfo.title, audioInfo.time, audioInfo.audio);
             item.active();
+            if (this.isAudioPlay) {
+                this.controls.play();
+            }
         }
     }
 }
