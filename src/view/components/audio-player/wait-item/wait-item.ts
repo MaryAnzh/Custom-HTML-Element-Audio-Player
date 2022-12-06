@@ -7,10 +7,22 @@ export class WaiteListItem extends Control {
     private container: Control;
     private title: Control;
     private time: Control;
+
+    public audioInfo: IPlayItem;
+    public audio: HTMLAudioElement;
+    public audioTime: number;
     public onClick: () => void;
 
-    constructor(item: IPlayItem) {
+    constructor(item: IPlayItem, audio: HTMLAudioElement, time: number) {
         super(null, 'li', 'items-list__item');
+        this.audioInfo = {
+            title: item.title,
+            src: item.src,
+        };
+ 
+        this.audio = audio;
+        this.audioTime = time;
+
         this.icon = new Control(this.node, 'div', ['items-list__item__icon', 'arrow-to-left']);
         const svg = document.createElementNS(`http://www.w3.org/2000/svg`, "svg");
         svg.setAttribute('viewBox', '0 0 30 15.7');
@@ -22,8 +34,7 @@ export class WaiteListItem extends Control {
         this.container = new Control(this.node, 'div', 'items-list__item__info');
         this.title = new Control(this.container.node, 'p', '', item.title);
 
-        const timeView = item.time ? Utils.viewTime(item.time) : '00:00';
-        this.time = new Control(this.container.node, 'p', '', timeView);
+        this.time = new Control(this.container.node, 'p', '', Utils.viewTime(time));
     }
 
     destroy(): void {

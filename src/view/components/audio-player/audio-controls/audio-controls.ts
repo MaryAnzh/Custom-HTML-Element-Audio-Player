@@ -7,7 +7,7 @@ export class AudioControls extends Control {
 
     private audioControls: Control;
 
-    private topContainar: Control;
+    private topContainer: Control;
     private playButton: Control;
     private audioTitle: Control;
 
@@ -25,9 +25,9 @@ export class AudioControls extends Control {
         super(parent, 'div', 'audio');
 
         this.audioControls = new Control(this.node, 'div', 'audio__controls');
-        this.topContainar = new Control(this.audioControls.node, 'div', 'audio__controls__top');
-        this.playButton = new Control(this.topContainar.node, 'button', 'audio__controls__top__button', '+');
-        this.audioTitle = new Control(this.topContainar.node, 'h4', 'audio__controls__top__title', 'Title');
+        this.topContainer = new Control(this.audioControls.node, 'div', 'audio__controls__top');
+        this.playButton = new Control(this.topContainer.node, 'button', 'audio__controls__top__button', '+');
+        this.audioTitle = new Control(this.topContainer.node, 'h4', 'audio__controls__top__title', 'Title');
         //this.playButton.node.onclick = () => this.play();
 
         this.timeBar = new Control(this.audioControls.node, 'div', 'audio__controls__time-bar');
@@ -41,9 +41,9 @@ export class AudioControls extends Control {
         this.soundBarRunner = new Control(this.soundBar.node, 'div', 'audio__controls__sound-bar__runner');
     }
 
-    public update(item: IPlayItem) {
-        this._audio.src = item.src;
-        this.audioTime.node.textContent = item.time ? Utils.viewTime(item.time) : '00:00';
+    public update(item: IPlayItem, audio: HTMLAudioElement, time: number) {
+        this._audio = audio;
+        this.audioTime.node.textContent = Utils.viewTime(time);
         this.audioTitle.node.textContent = item.title;
     }
 
@@ -59,5 +59,5 @@ export class AudioControls extends Control {
 
     private startTimer(): void { }
 
-    private (): void {}
+    private(): void { }
 }

@@ -2,12 +2,16 @@
     padding: 10px 5px;
 
     &__item {
+        width: 100%;
         font-weight: normal;
         padding: 10px 0;
         display: flex;
 
         &__icon {
             width: 15px;
+            height: 15px;
+            display: flex;
+            align-items: center;
             cursor: pointer;
             transition: .3s;
         }
@@ -31,22 +35,47 @@
             }
         }
 
-        .active-item {
+        .active-item-pause {
+            width: 15px;
             height: 15px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             background: lightblue;
-            fill: blue;
-            transform: rotate(270deg);
 
             svg {
-                width: 75%;
+                fill: blue;
+                width: 10px;
+            }
+        }
+
+        .active-item-play {
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            background: lightblue;
+
+            svg {
+                display: none;
+            }
+
+            &::before,
+            &::after {
+                content: '';
+                position: absolute;
+                width: 1px;
+                height: 10px;
+                background: blue;
             }
         }
 
         .not-active-item {
+            width: 15px;
             height: 15px;
             border-radius: 50%;
             display: flex;

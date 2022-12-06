@@ -1,19 +1,18 @@
 import { Control } from '../../../service/control';
-import { IPlayItem } from '../../../interfaces/play-item.interface';
+import { IPlayItem, IWaitListItem, IPlayListItem } from '../../../interfaces/play-item.interface';
 import { AudioControls } from './audio-controls/audio-controls'
 import { WaiteListItem } from './wait-item/wait-item'
 import { PlayItem } from './play-list-item/play-list-item';
 
 type OnclickSet = {
-    moveItemToPlayList: (item: IPlayItem) => void,
-    playStopAudio: (item: IPlayItem) => void,
+    moveItemToPlayList: (item: WaiteListItem) => void,
 }
 
 export class AudioPlayerCustomHTML extends HTMLElement {
     //data
-    private currentAudioItem: null | IPlayItem = null;
-    private waitListItems: IPlayItem[] = [];
-    private playListItems: IPlayItem[];
+    private isAudioInPlayer: boolean = false;
+    private _waitListItems: IWaitListItem[];
+    private _playListItems: IPlayListItem[];
 
     //HTMLElements
     private container: Control;
@@ -42,12 +41,12 @@ export class AudioPlayerCustomHTML extends HTMLElement {
 
     constructor() {
         super();
-        this.playListItems = [];
+
+        this._playListItems = [];
+        this._waitListItems = [];
     }
 
     async connectedCallback() {
-        this.waitListItems = await this.updateAudioList(this.playList);
-
         //audio container
         this.container = new Control(this, 'section', 'audio-player');
         //audio controls
@@ -61,12 +60,32 @@ export class AudioPlayerCustomHTML extends HTMLElement {
         this.waitingListTitle = new Control(this.waitingList.node, 'h4', 'list__title', 'Waiting list');
         this.waitingListUl = new Control(this.waitingList.node, 'ul', 'items-list');
 
-        this.waitListItems.forEach(item => {
-            const li = new WaiteListItem(item);
-            item.item = li;
-            li.onClick = () => this.onClick('moveItemToPlayList', item);
+        for (let i = 0; i < this.playList.length; i++) {
+            const audioInfo = this.playList[i];
+            const audio = new Audio();
+            audio.src = audioInfo.src;
+
+            const time: number = await new Promise((resolve): void => {
+                audio.onloadedmetadata = (): void => {
+                    resolve(audio.duration);
+                }
+            })
+
+            const li = new WaiteListItem(audioInfo, audio, time);
+            li.onClick = () => this.onClick('moveItemToPlayList', li);
+
+            const item: IWaitListItem = {
+                title: audioInfo.title,
+                src: audioInfo.src,
+                item: li,
+                audio: audio,
+                time: time,
+            }
+
+            this._waitListItems.push(item);
+            console.log(li.node);
             this.waitingListUl.node.appendChild(li.node);
-        });
+        }
     }
 
     disconnectedCallback() {
@@ -78,60 +97,36 @@ export class AudioPlayerCustomHTML extends HTMLElement {
 
     }
 
-    onClick = (type: keyof OnclickSet, item: IPlayItem): void => {
+    onClick = (type: keyof OnclickSet, item: WaiteListItem): void => {
         const onclickSet: OnclickSet = {
             moveItemToPlayList: this.moveItemToPlayList,
-            playStopAudio: this.playStopAudio,
         }
         onclickSet[type](item);
     }
 
     playStopAudio = (item: IPlayItem): void => {
-        // if (this.audio === audio) {
-        //     if (this.isPlay) {
-        //         this.play();
-        //     } else {
-        //         this.pause();
-        //     }
-        // } else {
-        //     if (this.isPlay) {
-        //         this.audio.pause();
-        //         this.audio.currentTime = 0;
-        //     }
-        //     this.audio = audio;
-        //     this.update();
-        //     this.play();
+        // if (this.isAudioInPlayer) {
+        //     item.item.play();
         // }
     }
 
-    moveItemToPlayList = (item: IPlayItem): void => {
-        this.waitListItems = this.waitListItems.filter(el => el !== item);
-        this.playListItems.push(item);
-        const li = new PlayItem(item);
-        const waitListItem = item.item;
-        item.item = li;
-        waitListItem.destroy();
-        this.playListUl.node.appendChild(li.node);
-        if (this.playListItems.length === 1) {
-            li.active();
+    moveItemToPlayList = (item: WaiteListItem): void => {
+        const playListItem: IPlayListItem = {
+            title: item.audioInfo.title,
+            src: item.audioInfo.src,
+            audio: item.audio,
+            time: item.audioTime,
+            item: new PlayItem({ title: item.audioInfo.title, src: item.audioInfo.src }, item.audio, item.audioTime),
         }
-    }
 
-    async updateAudioList(audioList: IPlayItem[]): Promise<IPlayItem[]> {
-        const newAudioList: IPlayItem[] = [];
-        for (let i = 0; i < audioList.length; i++) {
-            const item = audioList[i];
-            const audio = new Audio();
-            item.audio = audio;
-            audio.src = item.src;
-            const time: number = await new Promise((resolve): void => {
-                audio.onloadedmetadata = (): void => {
-                    resolve(audio.duration);
-                }
-            })
-            item.time = time;
-            newAudioList.push(item);
+        this._waitListItems = this._waitListItems.filter(el => el.src !== item.audioInfo.src);
+        item.destroy();
+
+        this.playListUl.node.appendChild(playListItem.item.node);
+        this._playListItems.push(playListItem);
+
+        if (this._playListItems.length === 1) {
+            playListItem.item.active();
         }
-        return newAudioList;
     }
 }

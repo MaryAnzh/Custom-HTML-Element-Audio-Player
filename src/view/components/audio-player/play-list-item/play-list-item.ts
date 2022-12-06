@@ -3,6 +3,7 @@ import { Control } from '../../../../service/control'
 import { Utils } from '../utils';
 
 export class PlayItem extends Control {
+    private audio: HTMLAudioElement;
     private playIcon: Control;
     private container: Control;
     private title: Control;
@@ -11,9 +12,10 @@ export class PlayItem extends Control {
 
     public onClick: () => void;
 
-    constructor(item: IPlayItem) {
+    constructor(item: IPlayItem, audio: HTMLAudioElement, time: number) {
         super(null, 'li', ['items-list__item', 'play-list-item']);
 
+        this.audio = audio;
         this.playIcon = new Control(this.node, 'div', ['items-list__item__icon', 'not-active-item']);
         const playSVG = document.createElementNS(`http://www.w3.org/2000/svg`, "svg");
         playSVG.setAttribute('viewBox', '0 0 30 15.7');
@@ -25,7 +27,7 @@ export class PlayItem extends Control {
         this.container = new Control(this.node, 'div', ['items-list__item__info', 'play-list-item__info']);
         this.title = new Control(this.container.node, 'p', '', item.title);
 
-        const timeView = item.time ? Utils.viewTime(item.time) : '00:00';
+        const timeView = Utils.viewTime(time);
         this.time = new Control(this.container.node, 'p', '', timeView);
 
         this.arrowIcon = new Control(this.node, 'div', ['items-list__item__icon', 'arrow-to-right']);
@@ -39,12 +41,24 @@ export class PlayItem extends Control {
 
     public active() {
         this.playIcon.node.classList.remove('not-active-item');
-        this.playIcon.node.classList.add('active-item');
+        this.playIcon.node.classList.add('active-item-pause');
     }
 
     public deactivate() {
-        this.playIcon.node.classList.remove('active-item');
+        this.playIcon.node.classList.remove('active-item-pause');
         this.playIcon.node.classList.add('not-active-item');
+    }
+
+    public play() {
+        this.audio.play();
+        this.playIcon.node.classList.remove('active-item-pause');
+        this.playIcon.node.classList.add('active-item-play');
+    }
+
+    public pause() {
+        this.audio.pause();
+        this.playIcon.node.classList.remove('active-item-play');
+        this.playIcon.node.classList.add('active-item-pause');
     }
 
     public destroy(): void {
