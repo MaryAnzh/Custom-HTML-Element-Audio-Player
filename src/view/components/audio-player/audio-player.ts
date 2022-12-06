@@ -140,27 +140,31 @@ export class AudioPlayerCustomHTML extends HTMLElement {
 
     playStopAudio = (item: PlayItem): void => {
 
-        // if (this.audioItem === item) {
-        //     if (this.isAudioPlay) {
-        //         this.audioItem.pause();
-        //         this.isAudioPlay = false;
-        //     } else {
-        //         this.audioItem.play();
-        //         this.isAudioPlay = true;
-        //     }
-        // } else {
-        //     this.audioItem.deactivate();
-        //     //     if (this.isAudioPlay) {
-        //     //         this.audioItem.pause();
-        //     //         this.audioItem = item;
-        //     //     } else {
-        //     //         this.audioItem = item;
-        //     //         this.audioItem.play();
-        //     //         this.isAudioPlay = true;
-        //     //     }
-        //     this.audioItem = item;
-        //     //this.controls.update({ title: item., src: playListItem.src }, playListItem.time);
-        //     item.active();
-        // }
+        if (this.audioItem === item) {
+            if (this.isAudioPlay) {
+                this.audioItem.viewPause();
+                this.isAudioPlay = false;
+            } else {
+                this.audioItem.viewPlay();
+                this.isAudioPlay = true;
+            }
+
+        } else {
+            const id: string = item.id;
+            const audioInfo: IAudioPlayerItem = this._audioList.filter(el => el.id === id)[0];
+
+            this.audioItem.deactivate();
+            //     if (this.isAudioPlay) {
+            //         this.audioItem.pause();
+            //         this.audioItem = item;
+            //     } else {
+            //         this.audioItem = item;
+            //         this.audioItem.play();
+            //         this.isAudioPlay = true;
+            //     }
+            this.audioItem = item;
+            this.controls.update(audioInfo.title, audioInfo.time, audioInfo.audio);
+            item.active();
+        }
     }
 }

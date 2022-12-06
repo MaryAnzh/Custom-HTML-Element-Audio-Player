@@ -52,12 +52,12 @@ export class PlayItem extends Control {
         this.playIcon.node.classList.add('not-active-item');
     }
 
-    public play() {
+    public viewPlay() {
         this.playIcon.node.classList.remove('active-item-pause');
         this.playIcon.node.classList.add('active-item-play');
     }
 
-    public pause() {
+    public viewPause() {
         this.playIcon.node.classList.remove('active-item-play');
         this.playIcon.node.classList.add('active-item-pause');
     }
