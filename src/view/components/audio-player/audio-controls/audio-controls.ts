@@ -4,6 +4,7 @@ import { Utils } from '../utils';
 
 export class AudioControls extends Control {
     private _audio: null | HTMLAudioElement = null;
+    private _timer: NodeJS.Timer;
 
     private audioControls: Control;
 
@@ -62,6 +63,7 @@ export class AudioControls extends Control {
             this._audio.onended = () => this.onEnded();
             this.playButton.node.classList.add('pause-button');
             this.playButton.node.classList.remove('play-button');
+            this.startTimer();
         } else {
             this.audioTitle.node.textContent = 'Add audio in playlist';
         }
@@ -73,6 +75,7 @@ export class AudioControls extends Control {
         this._audio.onended = null;
         this.playButton.node.classList.remove('pause-button');
         this.playButton.node.classList.add('play-button');
+        this.stopTimer();
     }
 
     public resetAudioTime() {
@@ -86,7 +89,20 @@ export class AudioControls extends Control {
         this._audio = null;
     }
 
-    private startTimer(): void { }
+    private startTimer(): void {
+        this._timer = setInterval(() => {
+            const time = this._audio.currentTime;
+            this.timesTimer.node.textContent = Utils.viewTime(time);
+        }, 250);
+    }
 
-    private(): void { }
+    private stopTimer(): void {
+        clearInterval(this._timer);
+    }
+
+    destroy(): void {
+        this.playButton.node.onclick = null;
+        clearInterval(this._timer);
+        super.destroy();
+    }
 }
