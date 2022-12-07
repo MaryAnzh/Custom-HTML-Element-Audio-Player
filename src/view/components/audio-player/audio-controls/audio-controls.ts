@@ -3,7 +3,7 @@ import { Control } from '../../../../service/control';
 import { Utils } from '../utils';
 
 export class AudioControls extends Control {
-    private _audio = new Audio();
+    private _audio: null | HTMLAudioElement = null;
 
     private audioControls: Control;
 
@@ -59,6 +59,12 @@ export class AudioControls extends Control {
 
     public resetAudioTime() {
         this._audio.currentTime = 0;
+    }
+
+    public resetAudioData() {
+        this.audioTime.node.textContent = Utils.viewTime(0);
+        this.audioTitle.node.textContent = 'Title';
+        this._audio = null;
     }
 
     private startTimer(): void { }

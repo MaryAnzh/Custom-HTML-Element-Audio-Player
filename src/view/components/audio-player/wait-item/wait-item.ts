@@ -13,7 +13,7 @@ export class WaiteListItem extends Control {
 
     public onClick: () => void;
 
-    constructor(item: IPlayItem, time: number, id: string) {
+    constructor(title: string, time: number, id: string) {
         super(null, 'li', 'items-list__item');
         this.id = id;
 
@@ -26,7 +26,7 @@ export class WaiteListItem extends Control {
         this.icon.node.onclick = () => this.onClick();
 
         this.container = new Control(this.node, 'div', 'items-list__item__info');
-        this.title = new Control(this.container.node, 'p', '', item.title);
+        this.title = new Control(this.container.node, 'p', '', title);
 
         this.time = new Control(this.container.node, 'p', '', Utils.viewTime(time));
     }
