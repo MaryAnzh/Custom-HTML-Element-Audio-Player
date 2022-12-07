@@ -14,7 +14,6 @@ export class AudioPlayerCustomHTML extends HTMLElement {
     private _audioList: IAudioPlayerItem[];
     private _waitListItems: WaiteListItem[];
     private _playListItems: PlayItem[];
-    private _lists: Lists;
 
     private isAudioPlay: boolean = false;
     private audioItem: PlayItem | null = null;
@@ -50,10 +49,6 @@ export class AudioPlayerCustomHTML extends HTMLElement {
         this._audioList = [];
         this._playListItems = [];
         this._waitListItems = [];
-        this._lists = {
-            waitList: this._waitListItems,
-            playList: this._playListItems,
-        }
     }
 
     async connectedCallback() {
@@ -98,7 +93,6 @@ export class AudioPlayerCustomHTML extends HTMLElement {
 
             this._waitListItems.push(li);
             this.waitingListUl.node.appendChild(li.node);
-
             this._audioList.push(item);
         }
     }
@@ -151,23 +145,36 @@ export class AudioPlayerCustomHTML extends HTMLElement {
 
     moveItemToWaitList = (item: PlayItem): void => {
         const id = item.id;
-
+        
         let prevItem: null | PlayItem;
-        let currentItemIndex: number;
         this._playListItems.forEach((el, i) => {
             if (el.id == id) {
                 prevItem = (i === 0 && this._playListItems.length === 1) ? null : (i === 0 ? this._playListItems[1] : this._playListItems[i - 1]);
-                currentItemIndex = i;
             }
         });
-        this._playListItems.splice(currentItemIndex, 1);
+        this._playListItems = this._playListItems.filter(el => el.id !== id);
+
+        if (this.audioItem === item) {
+            console.log('Это активный трек');
+            if (this.isAudioPlay) {
+                this.controls.pause();
+                this.controls.resetAudioTime();
+                this.isAudioPlay = false;
+                this.audioItem = null;
+            }
+
+            if (prevItem !== null) {
+                prevItem.active();
+                const prevItemInfo = this._audioList.find(el => el.id == prevItem.id);
+                this.controls.update(prevItemInfo.title, prevItemInfo.time, prevItemInfo.audio);
+                this.audioItem = prevItem;
+            } else {
+                this.controls.resetAudioData();
+                this.audioItem = null;
+            }
+        }
 
         item.destroy();
-        if (this.isAudioPlay) {
-            this.controls.pause();
-            this.controls.resetAudioTime();
-            this.isAudioPlay = false;
-        }
 
         const audioItem: IAudioPlayerItem = this._audioList.find(el => el.id === id);
         audioItem.location = 'waitList';
@@ -177,13 +184,6 @@ export class AudioPlayerCustomHTML extends HTMLElement {
         this._waitListItems.push(listItem);
         listItem.onClick = () => this.onClick('moveItemToPlayList', listItem);
 
-        if (prevItem !== null) {
-            prevItem.active();
-            const prevItemInfo = this._audioList.find(el => el.id == prevItem.id);
-            this.controls.update(prevItemInfo.title, prevItemInfo.time, prevItemInfo.audio);
-        } else {
-            this.controls.resetAudioData();
-        }
     }
 
     playStopAudio = (item: PlayItem): void => {
