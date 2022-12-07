@@ -124,21 +124,24 @@ export class AudioPlayerCustomHTML extends HTMLElement {
     }
 
     onEnded = () => {
-        let nextAudio: PlayItem;
-        const playListLength = this._playListItems.length;
-        this.audioItem.deactivate();
+        setTimeout(() => {
+            let nextAudio: PlayItem;
+            const playListLength = this._playListItems.length;
+            this.audioItem.deactivate();
 
-        this._playListItems.forEach((el, i) => {
-            if (this.audioItem === el) {
-                nextAudio = i === (playListLength - 1) ? this._playListItems[0] : this._playListItems[i + 1];
-            }
-        });
-        this.audioItem = nextAudio;
-        nextAudio.active();
-        nextAudio.viewPlay();
-        const audioInfo = this._audioList.find(el => el.id === nextAudio.id);
-        this.controls.update(audioInfo.title, audioInfo.time, audioInfo.audio);
-        this.controls.play();
+            this._playListItems.forEach((el, i) => {
+                if (this.audioItem === el) {
+                    nextAudio = i === (playListLength - 1) ? this._playListItems[0] : this._playListItems[i + 1];
+                }
+            });
+            this.audioItem = nextAudio;
+            nextAudio.active();
+            nextAudio.viewPlay();
+            const audioInfo = this._audioList.find(el => el.id === nextAudio.id);
+            this.controls.update(audioInfo.title, audioInfo.time, audioInfo.audio);
+            this.controls.play();
+        }, 1000);
+
     }
 
     moveItemToPlayList = (item: WaiteListItem): void => {
