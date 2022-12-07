@@ -5,6 +5,9 @@ import { Utils } from '../utils';
 export class AudioControls extends Control {
     private _audio: null | HTMLAudioElement = null;
     private _timer: NodeJS.Timer;
+    private isSoundRunnerMouseDown = false;
+    private onMousemove: (e: Event) => void;
+    private onMouseUp: () => void;
 
     private audioControls: Control;
 
@@ -48,6 +51,7 @@ export class AudioControls extends Control {
 
         this.soundBar = new Control(this.audioControls.node, 'div', 'audio__controls__sound-bar');
         this.soundBarRunner = new Control(this.soundBar.node, 'div', 'audio__controls__sound-bar__runner');
+        this.soundBarRunner.node.onmousedown = () => this.mouseDownSoundRunner();
     }
 
     public update(title: string, time: number, audio: HTMLAudioElement) {
@@ -100,9 +104,30 @@ export class AudioControls extends Control {
         clearInterval(this._timer);
     }
 
+    mouseDownSoundRunner = () => {
+        console.log('sound runner');
+        this.isSoundRunnerMouseDown = true;
+        this.onMousemove = (e: Event) => this.mouseMoveSoundRunner(e);
+        this.onMouseUp = () => this.mouseUp();
+        window.addEventListener('mousemove', this.onMousemove);
+        window.addEventListener('mouseup', this.onMouseUp);
+    }
+
+    mouseMoveSoundRunner = (e: Event) => {
+        console.log("движуха");
+    }
+
+    mouseUp = () => {
+        this.isSoundRunnerMouseDown = false;
+        window.removeEventListener('mousemove', this.onMousemove);
+        window.removeEventListener('mouseup', this.onMouseUp);
+    }
+
     destroy(): void {
         this.playButton.node.onclick = null;
         clearInterval(this._timer);
+        this.soundBarRunner.node.onmousedown = null;
+        this.soundBarRunner.node.onmouseup = null;
         super.destroy();
     }
 }
