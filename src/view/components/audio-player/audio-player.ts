@@ -57,6 +57,7 @@ export class AudioPlayerCustomHTML extends HTMLElement {
         this.container = new Control(this, 'section', 'audio-player');
         //audio controls
         this.controls = new AudioControls(this.container.node);
+        this.controls.onEnded = () => this.onEnded();
         //audio Lists
         this.lists = new Control(this.container.node, 'div', 'audio-player__lists');
         this.playListWrap = new Control(this.lists.node, 'div', ['audio-player__lists__play-list', 'list']);
@@ -122,6 +123,24 @@ export class AudioPlayerCustomHTML extends HTMLElement {
         }
     }
 
+    onEnded = () => {
+        let nextAudio: PlayItem;
+        const playListLength = this._playListItems.length;
+        this.audioItem.deactivate();
+
+        this._playListItems.forEach((el, i) => {
+            if (this.audioItem === el) {
+                nextAudio = i === (playListLength - 1) ? this._playListItems[0] : this._playListItems[i + 1];
+            }
+        });
+        this.audioItem = nextAudio;
+        nextAudio.active();
+        nextAudio.viewPlay();
+        const audioInfo = this._audioList.find(el => el.id === nextAudio.id);
+        this.controls.update(audioInfo.title, audioInfo.time, audioInfo.audio);
+        this.controls.play();
+    }
+
     moveItemToPlayList = (item: WaiteListItem): void => {
         this._waitListItems = this._waitListItems.filter(el => el !== item);
         const id = item.id;
@@ -145,7 +164,7 @@ export class AudioPlayerCustomHTML extends HTMLElement {
 
     moveItemToWaitList = (item: PlayItem): void => {
         const id = item.id;
-        
+
         let prevItem: null | PlayItem;
         this._playListItems.forEach((el, i) => {
             if (el.id == id) {
@@ -183,7 +202,6 @@ export class AudioPlayerCustomHTML extends HTMLElement {
         this.waitingListUl.node.appendChild(listItem.node);
         this._waitListItems.push(listItem);
         listItem.onClick = () => this.onClick('moveItemToPlayList', listItem);
-
     }
 
     playStopAudio = (item: PlayItem): void => {

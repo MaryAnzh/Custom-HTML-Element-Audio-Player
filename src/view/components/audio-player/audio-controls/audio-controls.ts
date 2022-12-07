@@ -20,6 +20,7 @@ export class AudioControls extends Control {
     private soundBarRunner: Control;
 
     private isPlay = false;
+    public onEnded: () => void;
 
     constructor(parent: HTMLElement) {
         super(parent, 'div', 'audio');
@@ -50,21 +51,25 @@ export class AudioControls extends Control {
     public play(): void {
         this._audio.play();
         this.isPlay = true;
+        this._audio.onended = () => this.onEnded();
     }
 
     public pause(): void {
         this._audio.pause();
         this.isPlay = false;
+        this._audio.onended = null;
     }
 
     public resetAudioTime() {
         this._audio.currentTime = 0;
+        this._audio.onended = null;
     }
 
     public resetAudioData() {
         this.audioTime.node.textContent = Utils.viewTime(0);
         this.audioTitle.node.textContent = 'Title';
         this._audio = null;
+        this._audio.onended = null;
     }
 
     private startTimer(): void { }
