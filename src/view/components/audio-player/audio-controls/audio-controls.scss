@@ -12,14 +12,17 @@
             &__button {
                 width: 30px;
                 height: 30px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
                 margin-bottom: 10px;
                 border-radius: 50px;
                 border: none;
                 outline: none;
                 background: lightblue;
-                color: blue;
                 transition: .3s;
                 cursor: pointer;
+                transform: rotate(-90deg);
 
                 &:hover {
                     background: rgb(197, 223, 231);
@@ -27,6 +30,40 @@
 
                 &:active {
                     background: white;
+                }
+            }
+
+            .play-button {
+                svg {
+                    fill: blue;
+                }
+            }
+
+            .pause-button {
+                position: relative;
+                transform: rotate(0deg);
+
+                svg {
+                    display: none;
+                }
+
+                &::before {
+                    position: absolute;
+                    content: '';
+                    width: 4px;
+                    height: 60%;
+                    left: 9px;
+                    background: blue;
+                }
+
+                &::after {
+                    position: absolute;
+                    content: '';
+                    width: 4px;
+                    height: 60%;
+                    right: 8px;
+                    background: blue;
+
                 }
             }
 

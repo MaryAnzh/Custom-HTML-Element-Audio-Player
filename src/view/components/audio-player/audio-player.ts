@@ -1,13 +1,8 @@
 import { Control } from '../../../service/control';
-import { IPlayItem, IWaitListItem, IPlayListItem, IAudioPlayerItem } from '../../../interfaces/play-item.interface';
+import { IPlayItem, IAudioPlayerItem, audioPlayerItem } from '../../../interfaces/play-item.interface';
 import { AudioControls } from './audio-controls/audio-controls'
 import { WaiteListItem } from './wait-item/wait-item'
 import { PlayItem } from './play-list-item/play-list-item';
-
-type Lists = {
-    waitList: WaiteListItem[],
-    playList: PlayItem[],
-}
 
 export class AudioPlayerCustomHTML extends HTMLElement {
     //data
@@ -52,12 +47,12 @@ export class AudioPlayerCustomHTML extends HTMLElement {
     }
 
     async connectedCallback() {
-
         //audio container
         this.container = new Control(this, 'section', 'audio-player');
         //audio controls
         this.controls = new AudioControls(this.container.node);
         this.controls.onEnded = () => this.onEnded();
+        this.controls.onClick = () => this.onClick('playStopAudio', this.audioItem)
         //audio Lists
         this.lists = new Control(this.container.node, 'div', 'audio-player__lists');
         this.playListWrap = new Control(this.lists.node, 'div', ['audio-player__lists__play-list', 'list']);
@@ -77,20 +72,12 @@ export class AudioPlayerCustomHTML extends HTMLElement {
                     resolve(audio.duration);
                 }
             })
-
             const id = `audioItem_${i}`;
 
             const li = new WaiteListItem(audioInfo.title, time, id);
             li.onClick = () => this.onClick('moveItemToPlayList', li);
 
-            const item: IAudioPlayerItem = {
-                id: id,
-                location: 'waitList',
-                title: audioInfo.title,
-                src: audioInfo.src,
-                audio: audio,
-                time: time,
-            }
+            const item: IAudioPlayerItem = audioPlayerItem(id, 'waitList', audioInfo.title, audioInfo.src, audio, time);
 
             this._waitListItems.push(li);
             this.waitingListUl.node.appendChild(li.node);
@@ -107,9 +94,7 @@ export class AudioPlayerCustomHTML extends HTMLElement {
 
     }
 
-    onClick = (type: 'moveItemToPlayList' |
-        'playStopAudio' |
-        'moveItemToWaitList',
+    onClick = (type: 'moveItemToPlayList' | 'playStopAudio' | 'moveItemToWaitList',
         item: WaiteListItem | PlayItem): void => {
 
         if (type === 'moveItemToPlayList') {
@@ -135,13 +120,13 @@ export class AudioPlayerCustomHTML extends HTMLElement {
                 }
             });
             this.audioItem = nextAudio;
+            const audioInfo = this._audioList.find(el => el.id === nextAudio.id);
+
             nextAudio.active();
             nextAudio.viewPlay();
-            const audioInfo = this._audioList.find(el => el.id === nextAudio.id);
             this.controls.update(audioInfo.title, audioInfo.time, audioInfo.audio);
             this.controls.play();
         }, 1000);
-
     }
 
     moveItemToPlayList = (item: WaiteListItem): void => {
@@ -167,7 +152,6 @@ export class AudioPlayerCustomHTML extends HTMLElement {
 
     moveItemToWaitList = (item: PlayItem): void => {
         const id = item.id;
-
         let prevItem: null | PlayItem;
         this._playListItems.forEach((el, i) => {
             if (el.id == id) {
@@ -195,7 +179,6 @@ export class AudioPlayerCustomHTML extends HTMLElement {
                 this.audioItem = null;
             }
         }
-
         item.destroy();
 
         const audioItem: IAudioPlayerItem = this._audioList.find(el => el.id === id);
@@ -208,6 +191,10 @@ export class AudioPlayerCustomHTML extends HTMLElement {
     }
 
     playStopAudio = (item: PlayItem): void => {
+        if(item == null) {
+            this.controls.play();
+            return;
+        }
         if (this.audioItem === item) {
             if (this.isAudioPlay) {
                 this.audioItem.viewPause();
@@ -218,7 +205,6 @@ export class AudioPlayerCustomHTML extends HTMLElement {
                 this.isAudioPlay = true;
                 this.controls.play();
             }
-
         } else {
             const id: string = item.id;
             const audioInfo: IAudioPlayerItem = this._audioList.filter(el => el.id === id)[0];
@@ -234,7 +220,10 @@ export class AudioPlayerCustomHTML extends HTMLElement {
             item.viewPlay();
             this.controls.play();
             this.isAudioPlay = true;
-
         }
+    }
+
+    destroy() {
+        this.remove();
     }
 }

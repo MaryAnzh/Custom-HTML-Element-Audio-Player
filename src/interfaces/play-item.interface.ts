@@ -1,6 +1,3 @@
-import { WaiteListItem } from "../view/components/audio-player/wait-item/wait-item";
-import { PlayItem } from '../view/components/audio-player/play-list-item/play-list-item'
-
 export interface IPlayItem {
     title: string,
     src: string,
@@ -15,18 +12,19 @@ export interface IAudioPlayerItem {
     time: number,
 }
 
-export interface IWaitListItem {
+export const audioPlayerItem = (id: string,
+    location: 'waitList' | 'playList',
     title: string,
     src: string,
-    item: WaiteListItem,
     audio: HTMLAudioElement,
-    time: number,
-}
-
-export interface IPlayListItem {
-    title: string,
-    src: string,
-    item: PlayItem,
-    audio: HTMLAudioElement,
-    time: number,
+    time: number): IAudioPlayerItem => {
+    const item: IAudioPlayerItem = {
+        id: id,
+        location: location,
+        title: title,
+        src: src,
+        audio: audio,
+        time: time,
+    }
+    return item;
 }

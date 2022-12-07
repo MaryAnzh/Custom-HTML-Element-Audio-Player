@@ -21,15 +21,22 @@ export class AudioControls extends Control {
 
     private isPlay = false;
     public onEnded: () => void;
+    onClick: () => void;
 
     constructor(parent: HTMLElement) {
         super(parent, 'div', 'audio');
 
         this.audioControls = new Control(this.node, 'div', 'audio__controls');
         this.topContainer = new Control(this.audioControls.node, 'div', 'audio__controls__top');
-        this.playButton = new Control(this.topContainer.node, 'button', 'audio__controls__top__button', '+');
+        this.playButton = new Control(this.topContainer.node, 'button', ['audio__controls__top__button', 'play-button']);
+        const svg = document.createElementNS(`http://www.w3.org/2000/svg`, "svg");
+        svg.setAttribute('viewBox', '0 0 30 15.7');
+        svg.innerHTML = `<path d="M29.7,1.4l-14,14c-0.4,0.4-1,0.4-1.4,0l-14-14c-0.4-0.4-0.4-1,0-1.4h29.4C30.1,0.4,30.1,1,29.7,1.4z"/>
+        `;
+        this.playButton.node.appendChild(svg);
+        this.playButton.node.onclick = () => this.onClick();
+
         this.audioTitle = new Control(this.topContainer.node, 'h4', 'audio__controls__top__title', 'Title');
-        //this.playButton.node.onclick = () => this.play();
 
         this.timeBar = new Control(this.audioControls.node, 'div', 'audio__controls__time-bar');
         this.timeBarRunner = new Control(this.timeBar.node, 'div', 'audio__controls__time-bar__runner');
@@ -49,15 +56,23 @@ export class AudioControls extends Control {
     }
 
     public play(): void {
-        this._audio.play();
-        this.isPlay = true;
-        this._audio.onended = () => this.onEnded();
+        if (this._audio !== null) {
+            this._audio.play();
+            this.isPlay = true;
+            this._audio.onended = () => this.onEnded();
+            this.playButton.node.classList.add('pause-button');
+            this.playButton.node.classList.remove('play-button');
+        } else {
+            this.audioTitle.node.textContent = 'Add audio in playlist';
+        }
     }
 
     public pause(): void {
         this._audio.pause();
         this.isPlay = false;
         this._audio.onended = null;
+        this.playButton.node.classList.remove('pause-button');
+        this.playButton.node.classList.add('play-button');
     }
 
     public resetAudioTime() {
@@ -69,7 +84,6 @@ export class AudioControls extends Control {
         this.audioTime.node.textContent = Utils.viewTime(0);
         this.audioTitle.node.textContent = 'Title';
         this._audio = null;
-        this._audio.onended = null;
     }
 
     private startTimer(): void { }
