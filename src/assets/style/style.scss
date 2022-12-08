@@ -1,0 +1,59 @@
+//fonts
+@import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@100;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@600;700&display=swap');
+
+@import './utils/reset.scss';
+@import './utils/vareable';
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    width: 100%;
+    min-height: 100vh;
+    height: 100%;
+    font-family: 'Roboto';
+    font-style: normal;
+    display: flex;
+    justify-content: center;
+}
+
+.wrapper {
+    width: 100%;
+    min-height: 100vh;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.header,
+.footer {
+    width: 100%;
+    padding: 10px 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: black;
+    color: white;
+}
+
+.main {
+    width: 100%;
+    min-height: 80vh;
+    height: fit-content;
+    display: flex;
+    justify-content: center;
+    padding: 30px 0;
+    background: black;
+    color: white;
+}
+
+@import './common/common.scss';
+@import '../../view/app.scss';

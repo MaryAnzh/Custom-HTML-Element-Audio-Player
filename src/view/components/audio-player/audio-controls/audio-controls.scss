@@ -1,0 +1,144 @@
+.audio {
+    &__controls {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+
+        &__top {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+
+            &__button {
+                width: 30px;
+                height: 30px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                margin-bottom: 10px;
+                border-radius: 50px;
+                border: none;
+                outline: none;
+                background: lightblue;
+                transition: .3s;
+                cursor: pointer;
+                transform: rotate(-90deg);
+
+                &:hover {
+                    background: rgb(197, 223, 231);
+                }
+
+                &:active {
+                    background: white;
+                }
+            }
+
+            .play-button {
+                svg {
+                    fill: blue;
+                }
+            }
+
+            .pause-button {
+                position: relative;
+                transform: rotate(0deg);
+
+                svg {
+                    display: none;
+                }
+
+                &::before {
+                    position: absolute;
+                    content: '';
+                    width: 4px;
+                    height: 60%;
+                    left: 9px;
+                    background: blue;
+                }
+
+                &::after {
+                    position: absolute;
+                    content: '';
+                    width: 4px;
+                    height: 60%;
+                    right: 8px;
+                    background: blue;
+
+                }
+            }
+
+            &__title {
+                width: calc(100% - 50px);
+                text-overflow: clip;
+                overflow: hidden;
+                white-space: nowrap;
+            }
+        }
+
+
+
+        &__time-bar {
+            position: relative;
+            display: flex;
+            align-items: center;
+            padding: 5px 10px;
+            //border: 1px solid white;
+
+            &::before {
+                position: absolute;
+                content: '';
+                width: 100%;
+                height: 2px;
+                left: 0;
+                background: lightblue;
+            }
+
+            &__runner {
+                width: 10px;
+                height: 10px;
+                position: absolute;
+                left: 0;
+                background: white;
+                border-radius: 50%;
+                cursor: pointer;
+            }
+
+        }
+
+        &__times {
+            width: 100%;
+            padding: 10px 5px;
+            display: flex;
+            justify-content: space-between;
+            color: white;
+        }
+
+        &__sound-bar {
+            position: relative;
+            width: 50px;
+            display: flex;
+            align-items: center;
+            padding: 10px;
+
+            &::before {
+                content: '';
+                position: absolute;
+                left: 0;
+                width: 100%;
+                height: 2px;
+                background: lightblue;
+            }
+
+            &__runner {
+                position: absolute;
+                right: 0;
+                width: 6px;
+                height: 10px;
+                border-radius: 4px;
+                background: white;
+                cursor: pointer;
+
+            }
+        }
+    }
+}
