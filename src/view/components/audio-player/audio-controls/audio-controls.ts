@@ -6,8 +6,6 @@ export class AudioControls extends Control {
     private _audio: null | HTMLAudioElement = null;
     private _timer: NodeJS.Timer;
     private isSoundRunnerMouseDown = false;
-    private onMousemove: (e: Event) => void;
-    private onMouseUp: () => void;
 
     private audioControls: Control;
 
@@ -107,10 +105,8 @@ export class AudioControls extends Control {
     mouseDownSoundRunner = () => {
         console.log('sound runner');
         this.isSoundRunnerMouseDown = true;
-        this.onMousemove = (e: Event) => this.mouseMoveSoundRunner(e);
-        this.onMouseUp = () => this.mouseUp();
-        window.addEventListener('mousemove', this.onMousemove);
-        window.addEventListener('mouseup', this.onMouseUp);
+        window.addEventListener('mousemove', this.mouseMoveSoundRunner);
+        window.addEventListener('mouseup', this.mouseUp);
     }
 
     mouseMoveSoundRunner = (e: Event) => {
@@ -119,8 +115,8 @@ export class AudioControls extends Control {
 
     mouseUp = () => {
         this.isSoundRunnerMouseDown = false;
-        window.removeEventListener('mousemove', this.onMousemove);
-        window.removeEventListener('mouseup', this.onMouseUp);
+        window.removeEventListener('mousemove', this.mouseMoveSoundRunner);
+        window.removeEventListener('mouseup', this.mouseUp);
     }
 
     destroy(): void {
